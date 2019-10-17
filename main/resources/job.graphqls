@@ -1,0 +1,18 @@
+type Job {
+  id: ID!
+  ownerID: ID!
+  clientID: ID!
+  jobName: String!
+  clientName: String!
+  dateAdded: String!
+  dateCompleted: String
+  completed: Boolean!
+}
+
+type Mutation {
+  newJob(  id: ID!,
+           ownerID: ID!,
+           jobName: String!
+           clientName: String!
+         ) : Author!
+}
