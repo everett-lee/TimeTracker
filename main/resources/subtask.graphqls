@@ -1,0 +1,27 @@
+
+type Subtask {
+  id: ID!
+  supertaskID: ID!
+  subtaskName: String!
+  category: String!
+  dateAdded: String!
+  dateCompleted: String
+  completed: Boolean!
+  totalTime: Long!
+  dependsOn: [Subtask]!
+}
+
+type Query {
+    getSubtask(subtaskId: ID): Subtask!
+    getAllSubtasks(ownerId: ID): [Subtask]!
+}
+
+type Mutation {
+  createSubtask(
+           ownerID: ID!,
+           supertaskID: ID!,
+           taskName: String!,
+           category: String!,
+           clientName: String!
+         ) : Subtask!
+}

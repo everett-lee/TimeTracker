@@ -1,16 +1,15 @@
 
-    type User {
-      id: ID!
-      email: String
-      password: String
-    }
-    
-    input AuthData {
-      email: String!
-      password: String!
-    }
+type User {
+  id: ID!
+  email: String
+  password: String
+}
 
-    type Mutation {
-      createUser(authProvider: AuthData!): User
-      createLink(url: String!, description: String!): Link
-    }
+input AuthData {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  createUser(authProvider: AuthData!): User
+}

@@ -1,0 +1,17 @@
+
+type Client {
+  id: ID!
+  jobID: ID!
+  clientName: String!
+  businessType: String!
+  location: String!
+}
+
+type Query {
+    getClient(jobId: ID): Client!
+    getAllClients(jobId: ID): [Client]!
+}
+
+type Mutation {
+  createUser(authProvider: AuthData!): User
+}
