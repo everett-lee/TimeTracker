@@ -5,11 +5,11 @@ type Task {
   clientID: ID!
   dateAdded: String!
   dateCompleted: String
+  subtasks: [Subtask]!
   completed: Boolean!
 }
 
 type Query {
-    getTask(taskId: ID): Task!
     getAllTasks(ownerId: ID): [Task]!
 }
 

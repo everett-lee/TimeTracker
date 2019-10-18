@@ -7,11 +7,6 @@ type Client {
   location: String!
 }
 
-type Query {
-    getClient(jobId: ID): Client!
-    getAllClients(jobId: ID): [Client]!
-}
-
-type Mutation {
+extend type Mutation {
   createUser(authProvider: AuthData!): User
 }

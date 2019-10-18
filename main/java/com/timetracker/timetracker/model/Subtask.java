@@ -5,44 +5,39 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-public class Task {
+public class Subtask {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long ownerId;
-    private Long clientID;
+    private String subtaskName;
+    private String category;
     private Date dateAdded;
     private Date dateCompleted;
     private boolean completed;
+    private Long totalTime;
+    private List<Subtask> dependsOn;
 
-    public Task(Long id) {
+    public Subtask(Long id) {
         this.id = id;
     }
 
-    public Long getId() {
-        return id;
+    public String getSubtaskName() {
+        return subtaskName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSubtaskName(String subtaskName) {
+        this.subtaskName = subtaskName;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
+    public String getCategory() {
+        return category;
     }
 
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public Long getClientID() {
-        return clientID;
-    }
-
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Date getDateAdded() {
@@ -67,5 +62,21 @@ public class Task {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public List<Subtask> getDependsOn() {
+        return dependsOn;
+    }
+
+    public void setDependsOn(List<Subtask> dependsOn) {
+        this.dependsOn = dependsOn;
+    }
+
+    public Long getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(Long totalTime) {
+        this.totalTime = totalTime;
     }
 }

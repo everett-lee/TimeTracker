@@ -11,12 +11,7 @@ type Subtask {
   dependsOn: [Subtask]!
 }
 
-type Query {
-    getSubtask(subtaskId: ID): Subtask!
-    getAllSubtasks(ownerId: ID): [Subtask]!
-}
-
-type Mutation {
+extend type Mutation {
   createSubtask(
            ownerID: ID!,
            supertaskID: ID!,
