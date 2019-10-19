@@ -2,7 +2,8 @@
 type Task {
   id: ID!
   ownerID: ID!
-  clientID: ID!
+  taskName: String!
+  client: Client!
   dateAdded: String!
   dateCompleted: String
   subtasks: [Subtask]!
@@ -15,8 +16,8 @@ type Query {
 
 type Mutation {
   createTask(
-           ownerID: ID!,
+           ownerId: ID!,
            taskName: String!,
-           clientName: String!
+           client: Client!
          ) : Task!
 }

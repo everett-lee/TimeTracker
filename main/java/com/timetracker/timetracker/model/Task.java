@@ -4,7 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Task {
@@ -12,21 +13,15 @@ public class Task {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private Long ownerId;
-    private Long clientID;
-    private Date dateAdded;
-    private Date dateCompleted;
+    private String taskName;
+    private Client client;
+    private LocalDate dateAdded;
+    private LocalDate dateCompleted;
+    private List<Subtask> subtasks;
     private boolean completed;
-
-    public Task(Long id) {
-        this.id = id;
-    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getOwnerId() {
@@ -37,35 +32,51 @@ public class Task {
         this.ownerId = ownerId;
     }
 
-    public Long getClientID() {
-        return clientID;
-    }
-
-    public void setClientID(Long clientID) {
-        this.clientID = clientID;
-    }
-
-    public Date getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(Date dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public Date getDateCompleted() {
-        return dateCompleted;
-    }
-
-    public void setDateCompleted(Date dateCompleted) {
-        this.dateCompleted = dateCompleted;
-    }
-
     public boolean isCompleted() {
         return completed;
     }
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public List<Subtask> getSubtasks() {
+        return subtasks;
+    }
+
+    public void setSubtasks(List<Subtask> subtasks) {
+        this.subtasks = subtasks;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public LocalDate getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(LocalDate dateAdded) {
+        this.dateAdded = dateAdded;
+    }
+
+    public LocalDate getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public void setDateCompleted(LocalDate dateCompleted) {
+        this.dateCompleted = dateCompleted;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 }

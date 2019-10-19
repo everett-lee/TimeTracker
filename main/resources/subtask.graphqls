@@ -1,7 +1,6 @@
 
 type Subtask {
   id: ID!
-  supertaskID: ID!
   subtaskName: String!
   category: String!
   dateAdded: String!
@@ -13,10 +12,8 @@ type Subtask {
 
 extend type Mutation {
   createSubtask(
-           ownerID: ID!,
-           supertaskID: ID!,
-           taskName: String!,
-           category: String!,
-           clientName: String!
+           subtaskName: String!,
+           category: String!
+           dependsOn: [Subtask]!
          ) : Subtask!
 }

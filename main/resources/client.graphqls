@@ -1,12 +1,15 @@
 
 type Client {
   id: ID!
-  jobID: ID!
   clientName: String!
   businessType: String!
   location: String!
 }
 
 extend type Mutation {
-  createUser(authProvider: AuthData!): User
+  createClient(
+       clientName: String!,
+       businessType: String!,
+       location: String!
+        ): Client!
 }

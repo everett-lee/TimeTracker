@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -12,17 +12,15 @@ public class Subtask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Long ownerId;
     private String subtaskName;
     private String category;
-    private Date dateAdded;
-    private Date dateCompleted;
+    private LocalDate dateAdded;
+    private LocalDate dateCompleted;
     private boolean completed;
     private Long totalTime;
     private List<Subtask> dependsOn;
 
-    public Subtask(Long id) {
-        this.id = id;
-    }
 
     public String getSubtaskName() {
         return subtaskName;
@@ -38,22 +36,6 @@ public class Subtask {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public Date getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(Date dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public Date getDateCompleted() {
-        return dateCompleted;
-    }
-
-    public void setDateCompleted(Date dateCompleted) {
-        this.dateCompleted = dateCompleted;
     }
 
     public boolean isCompleted() {
@@ -78,5 +60,33 @@ public class Subtask {
 
     public void setTotalTime(Long totalTime) {
         this.totalTime = totalTime;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public LocalDate getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(LocalDate dateAdded) {
+        this.dateAdded = dateAdded;
+    }
+
+    public LocalDate getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public void setDateCompleted(LocalDate dateCompleted) {
+        this.dateCompleted = dateCompleted;
     }
 }
