@@ -21,3 +21,13 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# props file
+*.properties
+
+
+git filter-branch --force --index-filter \
+  "git rm --cached --ignore-unmatch ./main/resources/application.properties" \
+  --prune-empty --tag-name-filter cat -- --all
+  > Rewrite 48dc599c80e20527ed902928085e7861e6b3cbe6 (266/266)
+  > Ref 'refs/heads/master' was rewritten
