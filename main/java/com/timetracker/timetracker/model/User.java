@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "userId")
     private Long id;
     private String email;
     private String password; // TODO: implement password hashing

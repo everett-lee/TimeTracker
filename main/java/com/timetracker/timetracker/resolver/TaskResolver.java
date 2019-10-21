@@ -8,23 +8,30 @@ import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
-
 public class TaskResolver implements GraphQLResolver<Task> {
-    private SubtaskRepository subtaskRepo;
     private ClientRepository clientRepo;
+    private SubtaskRepository subtaskRepo;
 
-    public TaskResolver(SubtaskRepository subtaskRepo, ClientRepository clientRepo) {
-        this.subtaskRepo = subtaskRepo;
+    public TaskResolver(ClientRepository clientRepo, SubtaskRepository subtaskRepo) {
         this.clientRepo = clientRepo;
+        this.subtaskRepo = subtaskRepo;
     }
 
     public List<Subtask> subtasks(Task task) {
-        return subtaskRepo.findByTask(task);
+        List<Subtask> out = new ArrayList<>();
+
+        for (Subtask subtask: task.getSubtasks()) {
+            out.add(subtaskRepo
+                    .findById(subtask.getId()).get());
+        }
+
+        return out;
     }
 
     public Client client(Task task) {
-        return clientRepo.findByTask(task);
+        return clientRepo.findById(task.getClient().getId()).get();
     }
 }

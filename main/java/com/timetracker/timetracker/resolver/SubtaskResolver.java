@@ -5,6 +5,7 @@ import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,6 +17,12 @@ public class SubtaskResolver implements GraphQLResolver<Subtask> {
     }
 
     public List<Subtask> dependsOn(Subtask subtask) {
-        return subtaskRepo.findBySubtask(subtask);
+        List<Subtask> out = new ArrayList<>();
+
+        for (Subtask s: subtask.getDependsOn()) {
+            out.add(subtaskRepo.findById(s.getId()).get());
+        }
+
+        return out;
     }
 }

@@ -1,9 +1,6 @@
 package com.timetracker.timetracker.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,6 +8,7 @@ import java.util.List;
 public class Subtask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "subtaskId")
     private Long id;
     private Long ownerId;
     private String subtaskName;
@@ -19,6 +17,8 @@ public class Subtask {
     private LocalDate dateCompleted;
     private boolean completed;
     private Long totalTime;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subtaskId")
     private List<Subtask> dependsOn;
 
 

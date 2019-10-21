@@ -1,9 +1,6 @@
 package com.timetracker.timetracker.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,12 +8,17 @@ import java.util.List;
 public class Task {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "taskId")
     private Long id;
     private Long ownerId;
     private String taskName;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clientId")
     private Client client;
     private LocalDate dateAdded;
     private LocalDate dateCompleted;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subtaskId")
     private List<Subtask> subtasks;
     private boolean completed;
 

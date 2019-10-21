@@ -1,18 +1,20 @@
 package com.timetracker.timetracker.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Client {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "clientId")
     private Long id;
     private String clientName;
     private String businessType;
     private String location;
+
+    public Client(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

@@ -1,0 +1,71 @@
+
+type Query {
+    getAllTasks(ownerId: ID): [Task]!
+}
+
+type Mutation {
+  createTask(
+           ownerId: ID!,
+           taskName: String!,
+           client: Client!
+         ) : Task!
+
+  createSubtask(
+           subtaskName: String!,
+           category: String!
+           dependsOn: [Subtask]!
+         ) : Subtask!
+
+  createClient(
+         clientName: String!,
+         businessType: String!,
+         location: String!
+          ): Client!
+
+  createUser(authProvider: AuthData!): User
+}
+
+type Task {
+  id: ID!
+  ownerID: ID!
+  taskName: String!
+  client: Client!
+  dateAdded: String!
+  dateCompleted: String
+  subtasks: [Subtask]!
+  completed: Boolean!
+}
+
+type Subtask {
+  id: ID!
+  subtaskName: String!
+  category: String!
+  dateAdded: String!
+  dateCompleted: String
+  completed: Boolean!
+  totalTime: Long!
+  dependsOn: [Subtask]!
+}
+
+type Client {
+  id: ID!
+  clientName: String!
+  businessType: String!
+  location: String!
+}
+
+type User {
+  id: ID!
+  email: String
+  password: String
+}
+
+input AuthData {
+  email: String!
+  password: String!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
