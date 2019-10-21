@@ -9,18 +9,22 @@ import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.repository.UserRepository;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-public class MutationResolver implements GraphQLMutationResolver {
+@Component
+public class Mutation implements GraphQLMutationResolver {
     private ClientRepository clientRepo;
     private SubtaskRepository subtaskRepo;
     private TaskRepository taskRepo;
     private UserRepository userRepo;
 
-    public MutationResolver(ClientRepository clientRepo, SubtaskRepository subtaskRepo
+    public Mutation(ClientRepository clientRepo, SubtaskRepository subtaskRepo
                             , TaskRepository taskRepo, UserRepository userRepo) {
         this.clientRepo = clientRepo;
         this.subtaskRepo = subtaskRepo;
@@ -29,11 +33,12 @@ public class MutationResolver implements GraphQLMutationResolver {
     }
 
 
-    public Task createTask(Long ownerId, String taskName, Client client) {
+    public Task createTask(Long ownerId, String taskName, Long clientId) {
 
         Task task = new Task();
         task.setOwnerId(ownerId);
         task.setTaskName(taskName);
+        Client client = clientRepo.findById(clientId).get();
         task.setClient(client);
         task.setDateAdded(LocalDate.now());
         task.setCompleted(false);
@@ -43,7 +48,7 @@ public class MutationResolver implements GraphQLMutationResolver {
         return task;
     }
 
-    public Subtask createSubtask(String subtaskName, String category, List<Subtask> dependsOn) {
+    public Subtask createSubtask(String subtaskName, String category, List<Long> dependsOnIds) {
 
         Subtask subtask = new Subtask();
         subtask.setSubtaskName(subtaskName);
@@ -51,16 +56,33 @@ public class MutationResolver implements GraphQLMutationResolver {
         subtask.setDateAdded(LocalDate.now());
         subtask.setCompleted(false);
         subtask.setTotalTime(0L);
+
+        List<Subtask> dependsOn = dependsOnIds.stream()
+                .map( id -> subtaskRepo.findById(id).get())
+                .collect(Collectors.toList());
+
         subtask.setDependsOn(dependsOn);
 
         subtaskRepo.save(subtask);
         return subtask;
     }
 
-    public Client create
+    public Client createClient(String clientName, String businessType, String location) {
 
-    public User createUser() {
+        Client client = new Client();
+        client.setClientName(clientName);
+        client.setBusinessType(businessType);
+        client.setLocation(location);
+
+        clientRepo.save(client);
+
+        return client;
+    }
+
+    public User createUser(String email, String password) {
         User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
 
         userRepo.save(user);
         return user;

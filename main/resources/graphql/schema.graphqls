@@ -7,13 +7,13 @@ type Mutation {
   createTask(
            ownerId: ID!,
            taskName: String!,
-           client: Client!
+           clientId: Long!
          ) : Task!
 
   createSubtask(
            subtaskName: String!,
            category: String!
-           dependsOn: [Subtask]!
+           dependsOnIds: [Long]!
          ) : Subtask!
 
   createClient(
@@ -22,12 +22,12 @@ type Mutation {
          location: String!
           ): Client!
 
-  createUser(authProvider: AuthData!): User
+  createUser(email: String!, password: String!): User
 }
 
 type Task {
   id: ID!
-  ownerID: ID!
+  ownerId: ID!
   taskName: String!
   client: Client!
   dateAdded: String!
@@ -58,14 +58,4 @@ type User {
   id: ID!
   email: String
   password: String
-}
-
-input AuthData {
-  email: String!
-  password: String!
-}
-
-schema {
-  query: Query
-  mutation: Mutation
 }

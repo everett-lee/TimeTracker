@@ -3,6 +3,7 @@ package com.timetracker.timetracker.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.TaskRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +12,11 @@ import java.util.List;
  * Root query class that returns the Tasks owned
  * by the current user.
  */
-public class QueryResolver implements GraphQLQueryResolver {
+@Component
+public class Query implements GraphQLQueryResolver {
     private TaskRepository taskRepo;
 
-    public QueryResolver(TaskRepository taskRepo) {
+    public Query(TaskRepository taskRepo) {
         this.taskRepo = taskRepo;
     }
 

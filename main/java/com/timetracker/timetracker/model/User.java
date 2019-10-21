@@ -8,7 +8,9 @@ public class User {
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "userId")
     private Long id;
+
     private String email;
+
     private String password; // TODO: implement password hashing
 
     public Long getId() {

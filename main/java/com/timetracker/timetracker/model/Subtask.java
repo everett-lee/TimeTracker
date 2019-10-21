@@ -10,17 +10,24 @@ public class Subtask {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "subtaskId")
     private Long id;
+
     private Long ownerId;
+
     private String subtaskName;
+
     private String category;
+
     private LocalDate dateAdded;
+
     private LocalDate dateCompleted;
+
     private boolean completed;
+
     private Long totalTime;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "subtaskId")
     private List<Subtask> dependsOn;
-
 
     public String getSubtaskName() {
         return subtaskName;

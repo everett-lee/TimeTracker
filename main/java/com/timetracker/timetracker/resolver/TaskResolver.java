@@ -7,10 +7,12 @@ import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class TaskResolver implements GraphQLResolver<Task> {
     private ClientRepository clientRepo;
     private SubtaskRepository subtaskRepo;
@@ -31,7 +33,7 @@ public class TaskResolver implements GraphQLResolver<Task> {
         return out;
     }
 
-    public Client client(Task task) {
-        return clientRepo.findById(task.getClient().getId()).get();
+    public Client client(Client client) {
+        return clientRepo.findById(client.getId()).get();
     }
 }

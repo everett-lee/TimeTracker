@@ -8,16 +8,19 @@ public class Client {
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "clientId")
     private Long id;
-    private String clientName;
-    private String businessType;
-    private String location;
 
-    public Client(Long id) {
-        this.id = id;
-    }
+    private String clientName;
+
+    private String businessType;
+
+    private String location;
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getClientName() {
@@ -43,4 +46,5 @@ public class Client {
     public void setLocation(String location) {
         this.location = location;
     }
+
 }

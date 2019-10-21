@@ -10,16 +10,23 @@ public class Task {
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "taskId")
     private Long id;
+
     private Long ownerId;
+
     private String taskName;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clientId")
     private Client client;
+
     private LocalDate dateAdded;
+
     private LocalDate dateCompleted;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "subtaskId")
     private List<Subtask> subtasks;
+
     private boolean completed;
 
     public Long getId() {
