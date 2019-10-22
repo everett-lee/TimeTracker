@@ -6,6 +6,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "subtask")
+/**
+ * Subtasks define the work involved in completing
+ * a task. Each has an associated category.
+ */
 public class Subtask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

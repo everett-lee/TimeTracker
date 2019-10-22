@@ -1,29 +1,21 @@
 package com.timetracker.timetracker.resolver;
 
-
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.timetracker.timetracker.model.Subtask;
-import com.timetracker.timetracker.repository.SubtaskRepository;
+import com.timetracker.timetracker.service.SubtaskService;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class SubtaskResolver implements GraphQLResolver<Subtask> {
-    private SubtaskRepository subtaskRepo;
+    private SubtaskService subtaskService;
 
-    public SubtaskResolver(SubtaskRepository subtaskRepo) {
-        this.subtaskRepo = subtaskRepo;
+    public SubtaskResolver(SubtaskService subtaskService) {
+        this.subtaskService = subtaskService;
     }
 
     public List<Subtask> dependsOn(Subtask subtask) {
-        List<Subtask> out = new ArrayList<>();
-
-        for (Subtask s: subtask.getDependsOn()) {
-            out.add(subtaskRepo.findById(s.getId()).get());
-        }
-
-        return out;
+        return subtaskService.dependsOn(subtask);
     }
 }

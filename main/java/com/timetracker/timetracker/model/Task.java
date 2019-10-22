@@ -6,6 +6,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "task")
+/**
+ *  Top level task. This represents the overall goal
+ *  and has a single client and one or more subtasks.
+ */
 public class Task {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -16,7 +20,9 @@ public class Task {
 
     private String taskName;
 
-    private Long clientId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clientId")
+    private Client client;
 
     private LocalDate dateAdded;
 
@@ -80,11 +86,11 @@ public class Task {
         this.taskName = taskName;
     }
 
-    public Long getClientId() {
-        return clientId;
+    public Client getClient() {
+        return client;
     }
 
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

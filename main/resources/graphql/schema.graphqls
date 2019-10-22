@@ -29,7 +29,7 @@ type Task {
   id: ID!
   ownerId: ID!
   taskName: String!
-  clientId: ID!
+  client: Client!
   dateAdded: String!
   dateCompleted: String
   subtasks: [Subtask]!

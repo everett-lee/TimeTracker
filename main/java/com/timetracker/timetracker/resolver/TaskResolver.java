@@ -1,7 +1,7 @@
 package com.timetracker.timetracker.resolver;
 
-
 import com.coxautodev.graphql.tools.GraphQLResolver;
+import com.timetracker.timetracker.model.Client;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.repository.ClientRepository;
@@ -30,5 +30,9 @@ public class TaskResolver implements GraphQLResolver<Task> {
         }
 
         return out;
+    }
+
+    public Client client(Task task) {
+        return clientRepo.findById(task.getClient().getId()).get();
     }
 }

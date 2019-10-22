@@ -5,86 +5,42 @@ import com.timetracker.timetracker.model.Client;
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.model.User;
-import com.timetracker.timetracker.repository.ClientRepository;
-import com.timetracker.timetracker.repository.SubtaskRepository;
-import com.timetracker.timetracker.repository.TaskRepository;
-import com.timetracker.timetracker.repository.UserRepository;
+import com.timetracker.timetracker.service.ClientService;
+import com.timetracker.timetracker.service.SubtaskService;
+import com.timetracker.timetracker.service.TaskService;
+import com.timetracker.timetracker.service.UserService;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class Mutation implements GraphQLMutationResolver {
-    private ClientRepository clientRepo;
-    private SubtaskRepository subtaskRepo;
-    private TaskRepository taskRepo;
-    private UserRepository userRepo;
+    private TaskService taskservice;
+    private SubtaskService subtaskService;
+    private UserService userService;
+    private ClientService clientService;
 
-    public Mutation(ClientRepository clientRepo, SubtaskRepository subtaskRepo
-                            , TaskRepository taskRepo, UserRepository userRepo) {
-        this.clientRepo = clientRepo;
-        this.subtaskRepo = subtaskRepo;
-        this.taskRepo = taskRepo;
-        this.userRepo = userRepo;
+    public Mutation(TaskService taskService, SubtaskService subtaskService,
+                    ClientService clientService, UserService userService) {
+        this.subtaskService = subtaskService;
+        this.taskservice = taskService;
+        this.clientService = clientService;
+        this.userService = userService;
     }
 
-
     public Task createTask(Long ownerId, String taskName, Long clientId) {
-
-        Task task = new Task();
-        task.setOwnerId(ownerId);
-        task.setTaskName(taskName);
-        task.setClientId(clientId);
-        task.setDateAdded(LocalDate.now());
-        task.setCompleted(false);
-        task.setSubtasks(new ArrayList<>());
-
-        taskRepo.save(task);
-        return task;
+        return taskservice.createTask(ownerId, taskName, clientId);
     }
 
     public Subtask createSubtask(String subtaskName, String category, List<Long> dependsOnIds) {
-
-        Subtask subtask = new Subtask();
-        subtask.setSubtaskName(subtaskName);
-        subtask.setCategory(category);
-        subtask.setDateAdded(LocalDate.now());
-        subtask.setCompleted(false);
-        subtask.setTotalTime(0L);
-
-        List<Subtask> dependsOn = dependsOnIds.stream()
-                .map( id -> subtaskRepo.findById(id).get())
-                .collect(Collectors.toList());
-
-        subtask.setDependsOn(dependsOn);
-
-        subtaskRepo.save(subtask);
-        return subtask;
+        return subtaskService.createSubtask(subtaskName, category, dependsOnIds);
     }
 
     public Client createClient(String clientName, String businessType, String location) {
-
-        Client client = new Client();
-        client.setClientName(clientName);
-        client.setBusinessType(businessType);
-        client.setLocation(location);
-
-        clientRepo.save(client);
-
-        return client;
+        return clientService.createClient(clientName, businessType, location);
     }
 
     public User createUser(String email, String password) {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-
-        userRepo.save(user);
-        return user;
+        return userService.createUser(email, password);
     }
-
-
 }
