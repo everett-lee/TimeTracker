@@ -3,9 +3,10 @@ package com.timetracker.timetracker.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "userId")
     private Long id;
 

@@ -5,9 +5,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Table(name = "task")
 public class Task {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "taskId")
     private Long id;
 
@@ -15,9 +16,7 @@ public class Task {
 
     private String taskName;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clientId")
-    private Client client;
+    private Long clientId;
 
     private LocalDate dateAdded;
 
@@ -57,14 +56,6 @@ public class Task {
         this.subtasks = subtasks;
     }
 
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
     public LocalDate getDateAdded() {
         return dateAdded;
     }
@@ -87,5 +78,13 @@ public class Task {
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 }

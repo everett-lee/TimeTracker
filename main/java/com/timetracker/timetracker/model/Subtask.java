@@ -5,9 +5,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Table(name = "subtask")
 public class Subtask {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subtaskId")
     private Long id;
 

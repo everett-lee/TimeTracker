@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Component
 public class Mutation implements GraphQLMutationResolver {
@@ -38,8 +37,7 @@ public class Mutation implements GraphQLMutationResolver {
         Task task = new Task();
         task.setOwnerId(ownerId);
         task.setTaskName(taskName);
-        Client client = clientRepo.findById(clientId).get();
-        task.setClient(client);
+        task.setClientId(clientId);
         task.setDateAdded(LocalDate.now());
         task.setCompleted(false);
         task.setSubtasks(new ArrayList<>());
