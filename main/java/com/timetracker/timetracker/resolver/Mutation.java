@@ -43,4 +43,12 @@ public class Mutation implements GraphQLMutationResolver {
     public User createUser(String email, String password) {
         return userService.createUser(email, password);
     }
+
+    public Subtask setSubtaskTime(Long subtaskId, Long time) {
+        return subtaskService.setSubtaskTime(subtaskId, time);
+    }
+
+    public Subtask setSubtaskComplete(Long subtaskId, boolean complete) {
+        return subtaskService.setSubtaskComplete(subtaskId, complete);
+    }
 }

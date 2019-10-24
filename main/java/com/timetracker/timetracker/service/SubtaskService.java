@@ -37,6 +37,20 @@ public class SubtaskService {
         return subtask;
     }
 
+    @Transactional
+    public Subtask setSubtaskTime(Long subtaskId, Long time) {
+        Subtask subtask = subtaskRepo.findById(subtaskId).get();
+        subtask.setTotalTime(time);
+        return subtask;
+    }
+
+    @Transactional
+    public Subtask setSubtaskComplete(Long subtaskId, boolean complete) {
+        Subtask subtask = subtaskRepo.findById(subtaskId).get();
+        subtask.setCompleted(complete);
+        return subtask;
+    }
+
     @Transactional(readOnly = true)
     public List<Subtask> dependsOn(Subtask subtask) {
         List<Subtask> out = new ArrayList<>();

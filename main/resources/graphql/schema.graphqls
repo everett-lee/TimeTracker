@@ -16,6 +16,16 @@ type Mutation {
            dependsOnIds: [Long]!
          ) : Subtask!
 
+  setSubtaskTime(
+            subtaskId: ID!,
+            time: Long!
+         ) : Subtask!
+
+  setSubtaskComplete(
+            subtaskId: ID!,
+            complete: Boolean!
+         ) : Subtask!
+
   createClient(
          clientName: String!,
          businessType: String!,
