@@ -12,7 +12,8 @@ public class User {
 
     private String email;
 
-    private String password; // TODO: implement password hashing
+    // stored as hash
+    private String password;
 
     public Long getId() {
         return id;
