@@ -25,4 +25,9 @@ public class UserService {
         userRepo.save(user);
         return user;
     }
+
+    @Transactional(readOnly = true)
+    public User findbyEmail(String email) {
+        return userRepo.findByEmail(email);
+    }
 }

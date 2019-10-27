@@ -1,6 +1,7 @@
 
 type Query {
     getAllTasks(ownerId: ID): [Task]!
+    findUserByEmail(email: String): User!
 }
 
 type Mutation {

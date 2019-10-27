@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;import org.springframework.beans.factory.annotation.Value;
+import java.util.function.Function;
+
+import com.timetracker.timetracker.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -47,9 +50,11 @@ public class JwtTokenUtil implements Serializable {
     }
 
 
-    //generate token for user TODO: use email
+    //generate token for user with email claim TODO: include user id as a claim?
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("email", userDetails.getUsername());
+
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

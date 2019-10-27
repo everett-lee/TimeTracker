@@ -10,6 +10,7 @@ public class User {
     @Column(name = "userId")
     private Long id;
 
+    @Column(unique=true)
     private String email;
 
     // stored as hash
