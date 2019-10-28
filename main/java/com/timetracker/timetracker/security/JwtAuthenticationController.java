@@ -36,7 +36,8 @@ public class JwtAuthenticationController {
     }
 
     // use AuthenticationManager as a check to confirm valid log in
-    // details
+    // details. This is done by comparing credentials to those stored
+    // in the database
     private void authenticate(String username, String password) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

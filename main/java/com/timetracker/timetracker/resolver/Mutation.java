@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+/**
+ * Handles actions that modify state in some way,
+ * by creating or altering records.
+ */
 public class Mutation implements GraphQLMutationResolver {
     private TaskService taskservice;
     private SubtaskService subtaskService;

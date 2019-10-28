@@ -15,6 +15,8 @@ public class SubtaskResolver implements GraphQLResolver<Subtask> {
         this.subtaskService = subtaskService;
     }
 
+    // return the list of Subtasks that this Subtask
+    // depends on
     public List<Subtask> dependsOn(Subtask subtask) {
         return subtaskService.dependsOn(subtask);
     }

@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
+/**
+ * Implement the Spring Security UserDetailsService interface
+ * so that credentials can be checked against the database
+ * and UserDetails returned
+ */
 public class JwtUserDetailsService implements UserDetailsService {
     private UserRepository userRepo;
 

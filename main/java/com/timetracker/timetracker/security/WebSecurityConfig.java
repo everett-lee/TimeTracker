@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // configure AuthenticationManager so that it knows from where to load
         // user for matching credentials
         auth.userDetailsService(jwtUserDetailsService)
-                // Use BCryptPasswordEncoder
+                // Use encoder specified below
                 .passwordEncoder(passwordEncoder());
     }
 
