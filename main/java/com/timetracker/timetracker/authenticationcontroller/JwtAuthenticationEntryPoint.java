@@ -1,4 +1,4 @@
-package com.timetracker.timetracker.security;
+package com.timetracker.timetracker.authenticationcontroller;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -11,8 +11,7 @@ import java.io.Serializable;
 
 @Component
 /**
- * Respond with 401 status if request not
- * authenticated
+ * Respond with 401 status if request not authenticated
  */
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
     @Override

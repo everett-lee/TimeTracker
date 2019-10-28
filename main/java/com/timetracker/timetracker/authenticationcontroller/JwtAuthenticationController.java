@@ -1,5 +1,9 @@
-package com.timetracker.timetracker.security;
+package com.timetracker.timetracker.authenticationcontroller;
 
+import com.timetracker.timetracker.model.User;
+import com.timetracker.timetracker.security.JwtRequest;
+import com.timetracker.timetracker.security.JwtResponse;
+import com.timetracker.timetracker.security.JwtTokenUtil;
 import com.timetracker.timetracker.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +50,12 @@ public class JwtAuthenticationController {
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID CREDENTIALS", e);
         }
+    }
+
+    // TODO deal with duplicates
+    // register a new user to the database
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity<?> saveUser(@RequestBody User user) throws Exception {
+        return ResponseEntity.ok(userDetailsService.save(user));
     }
 }

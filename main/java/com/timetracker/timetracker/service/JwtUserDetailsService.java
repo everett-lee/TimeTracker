@@ -2,10 +2,13 @@ package com.timetracker.timetracker.service;
 
 import com.timetracker.timetracker.repository.UserRepository;
 import com.timetracker.timetracker.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -17,13 +20,17 @@ import java.util.ArrayList;
  */
 public class JwtUserDetailsService implements UserDetailsService {
     private UserRepository userRepo;
+    private PasswordEncoder passwordEncoder;
 
-    public JwtUserDetailsService(UserRepository userRepo) {
+
+    @Autowired
+    public JwtUserDetailsService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    // overrides only method
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findByEmail(email);
 
@@ -31,8 +38,19 @@ public class JwtUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(String.format("User with email %s not found", email));
         }
 
-        // return Spring User representation of the user
+        // return Spring Security User representation of the user (with no roles)
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
                 new ArrayList<>());
+    }
+
+    @Transactional
+    // save user to the database
+    public User save(User user) {
+        User newUser = new User();
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepo.save(newUser);
+
+        return newUser;
     }
 }

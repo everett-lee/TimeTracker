@@ -3,7 +3,8 @@ package com.timetracker.timetracker.security;
 import java.io.Serializable;
 
 /**
- * Encapsulates user's log in details
+ * Encapsulates user's log in details sent
+ * by the client to the authentication endpoint
  */
 public class JwtRequest implements Serializable {
     private String username;
