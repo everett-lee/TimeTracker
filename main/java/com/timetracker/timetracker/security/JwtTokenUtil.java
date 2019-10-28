@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.timetracker.timetracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -20,11 +19,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtTokenUtil implements Serializable {
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
+    // get secret key from config
     @Value("${jwt.secret}")
     private String secret;
 
-    //retrieve username from jwt token
-    public String getUsernameFromToken(String token) {
+    //retrieve email from jwt token
+    public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
@@ -53,8 +53,8 @@ public class JwtTokenUtil implements Serializable {
     //generate token for user with email claim TODO: include user id as a claim?
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("email", userDetails.getUsername());
 
+        // sets subject as the provided username/email
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
@@ -65,9 +65,10 @@ public class JwtTokenUtil implements Serializable {
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
-    //validate token
+    // validate by comparing email/username with that supplied
+    // in the token
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String email = getEmailFromToken(token);
+        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

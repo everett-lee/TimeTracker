@@ -58,12 +58,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 // no authentication for these endpoints
-                .authorizeRequests().antMatchers("**/graphql/**", "/authenticate").permitAll()
-                .and().
-                // session is not used to store user's state.
-                 exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);        // Add a filter to validate the tokens with every request
+                .authorizeRequests()
+                    .antMatchers("**/graphql/**", "/authenticate")
+                    .permitAll()
+                    .and()
+                    // session is not used to store user's state.
+                    .exceptionHandling()
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

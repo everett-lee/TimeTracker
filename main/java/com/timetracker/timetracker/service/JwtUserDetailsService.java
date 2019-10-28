@@ -18,12 +18,15 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    // overrides only method
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findByEmail(email);
 
         if (user == null) {
             throw new UsernameNotFoundException(String.format("User with email %s not found", email));
         }
+
+        // return Spring User representation of the user
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
                 new ArrayList<>());
     }
