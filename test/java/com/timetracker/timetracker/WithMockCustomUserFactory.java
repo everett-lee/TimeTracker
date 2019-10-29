@@ -14,7 +14,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MockCustomUserFactory implements WithSecurityContextFactory<WithMockCustomUser> {
+/**
+ *  Factory for creating mock security context for testing.
+ */
+public class WithMockCustomUserFactory implements WithSecurityContextFactory<WithMockCustomUser> {
 
 
     @Override
@@ -30,7 +33,8 @@ public class MockCustomUserFactory implements WithSecurityContextFactory<WithMoc
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication
-                        (new UsernamePasswordAuthenticationToken( principal, principal.getPassword(), principal.getAuthorities()));
+                        (new UsernamePasswordAuthenticationToken( principal,
+                                principal.getPassword(), principal.getAuthorities()));
 
         return context;
     }

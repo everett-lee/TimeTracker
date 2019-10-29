@@ -24,7 +24,7 @@ public class TaskService {
 
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
-    public Task createTask(@Param("ownerId") Long ownerId, String taskName, Long clientId) {
+    public Task createTask(Long ownerId, String taskName, Long clientId) {
 
         Task task = new Task();
         task.setOwnerId(ownerId);
@@ -39,14 +39,10 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<Task> getAllTasks(Long id) {
-        List<Task> tasks = new ArrayList<>();
+    @PreAuthorize("#ownerId == principal.id")
+    public List<Task> getAllTasksByOwnerId(Long ownerId) {
 
-        for (Task t: taskRepo.findAll()) {
-            if (t.getOwnerId() == id) {
-                tasks.add(t);
-            }
-        }
+        List<Task> tasks = taskRepo.findAllByOwnerId(ownerId);
         return tasks;
     }
 }

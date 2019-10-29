@@ -24,7 +24,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     public List<Task> getAllTasks(Long ownerId) {
-        return taskService.getAllTasks(ownerId);
+        return taskService.getAllTasksByOwnerId(ownerId);
     }
 
     public User findUserByEmail(String email) {
