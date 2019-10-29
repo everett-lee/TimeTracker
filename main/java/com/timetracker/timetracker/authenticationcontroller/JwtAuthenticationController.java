@@ -28,11 +28,11 @@ public class JwtAuthenticationController {
     public ResponseEntity<?> createAuthenticationToken
             (@RequestBody JwtRequest authenticationRequest) throws Exception {
 
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
         // find the corresponding user details from the database
         final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
+                .loadUserByUsername(authenticationRequest.getEmail());
 
         // generate the token and append to the response
         final String token = jwtTokenUtil.generateToken(userDetails);

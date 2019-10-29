@@ -1,5 +1,6 @@
 package com.timetracker.timetracker.service;
 
+import com.timetracker.timetracker.model.CustomPrincipalUser;
 import com.timetracker.timetracker.repository.UserRepository;
 import com.timetracker.timetracker.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public CustomPrincipalUser loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findByEmail(email);
 
         if (user == null) {
@@ -39,7 +40,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
 
         // return Spring Security User representation of the user (with no roles)
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+        return new CustomPrincipalUser(user.getId(), user.getEmail(), user.getPassword(),
                 new ArrayList<>());
     }
 
@@ -49,6 +50,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         User newUser = new User();
         newUser.setEmail(user.getEmail());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+
         userRepo.save(newUser);
 
         return newUser;

@@ -2,6 +2,7 @@ package com.timetracker.timetracker.service;
 
 import com.timetracker.timetracker.model.User;
 import com.timetracker.timetracker.repository.UserRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

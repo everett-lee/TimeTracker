@@ -3,6 +3,8 @@ package com.timetracker.timetracker.service;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +23,8 @@ public class TaskService {
     }
 
     @Transactional
-    public Task createTask(Long ownerId, String taskName, Long clientId) {
-
+    @PreAuthorize("#ownerId == principal.id")
+    public Task createTask(@Param("ownerId") Long ownerId, String taskName, Long clientId) {
 
         Task task = new Task();
         task.setOwnerId(ownerId);

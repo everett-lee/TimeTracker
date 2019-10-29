@@ -57,8 +57,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 // no authentication for these endpoints
                 .authorizeRequests()
-                    .antMatchers("**/graphql/**", "/authenticate", "/register")
+                    .antMatchers("/authenticate", "/register")
                     .permitAll()
+                    // all others must be authenticated
+                    .anyRequest().authenticated()
                     .and()
                     // session is not used to store user's state.
                     .exceptionHandling()

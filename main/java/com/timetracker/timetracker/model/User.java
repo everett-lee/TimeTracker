@@ -13,6 +13,17 @@ public class User {
     @Column(unique=true)
     private String email;
 
+    // no-arg constructor used by default
+    public User() {
+    }
+
+    // constructor for mocking users in tests
+    public User(long id, String email) {
+        this.id = id;
+        this.email = email;
+        this.password = "password";
+    }
+
     // stored as hash
     private String password;
 
