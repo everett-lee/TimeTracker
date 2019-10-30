@@ -83,12 +83,72 @@ public class TestTaskActions {
 
         List<com.timetracker.timetracker.model.Task> result = taskService.getAllTasksByOwnerId(1L);
 
-        // there are three tasks
+        // there are three tasks in the repo
         assertEquals(taskRepo.count(), 3);
-        // remove any with wrong id
-        result.stream().filter( t -> t.getOwnerId() == 1L);
         // assert tasks owned by this user is of the correct amount
         assertEquals(2, result.size());
+        // remove any with wrong id and check count is the same
+        assertEquals(2, result.stream().filter( t -> t.getOwnerId() == 1L).count());
+    }
+
+
+    // expect to succeed as user with id 1 owns this task
+    @Test
+    @WithMockCustomUser( id = 1L )
+    public void testSetCompleted() {
+        String taskName = "Fix the rocket";
+        clientService.createClient("Tesla", "Space stuff", "Mars");
+        taskService.createTask(1L, taskName, 1L);
+        taskService.setTaskComplete(1L, 1L, true);
+
+        assertEquals(taskRepo.findAllByOwnerId(1L).get(0).isCompleted(), true);
+    }
+
+    // expect to raise exception as user with id 1 should
+    // not alter tasks by using owner id 2
+    @Test (expected = AccessDeniedException.class)
+    @WithMockCustomUser( id = 1L )
+    public void testSetCompletedWhereWrongUserIdUsed() {
+        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient("Hat co", "Hat making", "Broadstairs");
+
+        Task t1 = new Task();
+        t1.setTaskName("Fix the rocket");
+        t1.setClient(clientRepo.findById(1L).get());
+        t1.setOwnerId(1L);
+        Task t2 = new Task();
+        t2.setTaskName("Summarise: what is a hat?");
+        t2.setClient(clientRepo.findById(2L).get());
+        t2.setOwnerId(2L);
+
+        taskService.setTaskComplete(2L, 2L, true);
+
+        assertEquals(taskRepo.findAllByOwnerId(1L).get(0).isCompleted(), true);
+    }
+
+    // expect to raise exception as user with id 1 does not
+    // own task with id 2
+    @Test (expected = AccessDeniedException.class)
+    @WithMockCustomUser( id = 1L )
+    public void testSetCompletedWhereWrongTaskIdUsed() {
+        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient("Hat co", "Hat making", "Broadstairs");
+
+        Task t1 = new Task();
+        t1.setTaskName("Fix the rocket");
+        t1.setClient(clientRepo.findById(1L).get());
+        t1.setOwnerId(1L);
+        Task t2 = new Task();
+        t2.setTaskName("Summarise: what is a hat?");
+        t2.setClient(clientRepo.findById(2L).get());
+        t2.setOwnerId(2L);
+
+        taskRepo.save(t1);
+        taskRepo.save(t2);
+
+        taskService.setTaskComplete(1L, 2L, true);
+
+        assertEquals(t2.isCompleted(), true);
     }
 }
 

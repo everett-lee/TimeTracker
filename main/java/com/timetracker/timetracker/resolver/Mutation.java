@@ -36,6 +36,10 @@ public class Mutation implements GraphQLMutationResolver {
         return taskservice.createTask(ownerId, taskName, clientId);
     }
 
+    public Task setTaskComplete(Long ownerId, Long taskId, boolean complete) {
+        return taskservice.setTaskComplete(ownerId, taskId, complete);
+    }
+
     public Subtask createSubtask(String subtaskName, String category, List<Long> dependsOnIds) {
         return subtaskService.createSubtask(subtaskName, category, dependsOnIds);
     }

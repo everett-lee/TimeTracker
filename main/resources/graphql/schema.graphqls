@@ -11,6 +11,12 @@ type Mutation {
            clientId: Long!
          ) : Task!
 
+  setTaskComplete(
+              ownerId: ID!,
+              taskId: ID!,
+              complete: Boolean!
+           ) : Task!
+
   createSubtask(
            subtaskName: String!,
            category: String!

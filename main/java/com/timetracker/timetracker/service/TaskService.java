@@ -3,7 +3,7 @@ package com.timetracker.timetracker.service;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +35,21 @@ public class TaskService {
         task.setSubtasks(new ArrayList<>());
 
         taskRepo.save(task);
+        return task;
+    }
+
+    @Transactional
+    @PreAuthorize("#ownerId == principal.id")
+    public Task setTaskComplete(Long ownerId, Long taskId, boolean complete) {
+
+        Task task = taskRepo.findById(taskId).get();
+
+        if (task.getOwnerId() != ownerId) {
+            throw new AccessDeniedException("User does not have ownership of this Task");
+        }
+
+        task.setCompleted(complete);
+
         return task;
     }
 
