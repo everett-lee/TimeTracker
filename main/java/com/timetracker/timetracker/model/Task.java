@@ -13,23 +13,23 @@ import java.util.List;
 public class Task {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "taskId")
+    @Column(name = "task_id")
     private Long id;
 
     private Long ownerId;
 
     private String taskName;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clientId")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_fk")
     private Client client;
 
     private LocalDate dateAdded;
 
     private LocalDate dateCompleted;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subtaskId")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn( name = "subtask_fk")
     private List<Subtask> subtasks;
 
     private boolean completed;

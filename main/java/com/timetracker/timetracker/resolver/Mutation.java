@@ -40,16 +40,13 @@ public class Mutation implements GraphQLMutationResolver {
         return taskservice.setTaskComplete(ownerId, taskId, complete);
     }
 
-    public Subtask createSubtask(String subtaskName, String category, List<Long> dependsOnIds) {
-        return subtaskService.createSubtask(subtaskName, category, dependsOnIds);
+    public Subtask createSubtask(Long ownerId, Long taskId, String subtaskName,
+                                 String category, List<Long> dependsOnIds) {
+        return subtaskService.createSubtask(ownerId, taskId, subtaskName, category, dependsOnIds);
     }
 
     public Client createClient(String clientName, String businessType, String location) {
         return clientService.createClient(clientName, businessType, location);
-    }
-
-    public User createUser(String email, String password) {
-        return userService.createUser(email, password);
     }
 
     public Subtask setSubtaskTime(Long subtaskId, Long time) {

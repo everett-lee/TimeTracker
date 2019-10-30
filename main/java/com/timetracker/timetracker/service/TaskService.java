@@ -1,7 +1,9 @@
 package com.timetracker.timetracker.service;
 
+import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
+import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,11 +17,14 @@ import java.util.List;
 @Service
 public class TaskService {
     private TaskRepository taskRepo;
+    private SubtaskRepository subtaskRepo;
     private ClientRepository clientRepo;
 
-    public TaskService(TaskRepository taskRepo, ClientRepository clientRepo) {
+    public TaskService(TaskRepository taskRepo, ClientRepository clientRepo,
+                       SubtaskRepository subtaskRepo) {
         this.taskRepo = taskRepo;
         this.clientRepo = clientRepo;
+        this.subtaskRepo = subtaskRepo;
     }
 
     @Transactional

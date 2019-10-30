@@ -1,15 +1,19 @@
 package com.timetracker.timetracker;
 
+
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
+import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.service.ClientService;
+import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -20,7 +24,7 @@ import static org.junit.Assert.assertEquals;
  * Checks that actions relating to modifying and retrieving
  * tasks can only be performed by owner
  */
-
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 public class TestTaskActions {
@@ -30,15 +34,18 @@ public class TestTaskActions {
     @Autowired
     TaskService taskService;
     @Autowired
+    SubtaskService subtaskService;
+    @Autowired
     TaskRepository taskRepo;
     @Autowired
     ClientRepository clientRepo;
-
+    @Autowired
+    SubtaskRepository subtaskRepository;
 
     // expect successful addition of task where user's id matches task
     // owner id
     @Test
-    @WithMockCustomUser( id = 1L )
+    @WithMockCustomUser(id = 1L)
     public void testCreateTaskValidId() {
         String taskName = "Fix the rocket";
         clientService.createClient("Tesla", "Space stuff", "Mars");
@@ -49,8 +56,8 @@ public class TestTaskActions {
 
     // expect access to be denied where user id does not match the task
     // owner id
-    @Test (expected = AccessDeniedException.class)
-    @WithMockCustomUser( id = 4L )
+    @Test(expected = AccessDeniedException.class)
+    @WithMockCustomUser(id = 4L)
     public void testCreateTaskInvalidId() {
         clientService.createClient("Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Fix the rocket", 1L);
@@ -59,7 +66,7 @@ public class TestTaskActions {
     // expect successful addition of task where user's id matches task
     // owner id
     @Test
-    @WithMockCustomUser( id = 1L )
+    @WithMockCustomUser(id = 1L)
     public void testOnlyOwnedTasksRetrieved() {
         clientService.createClient("Tesla", "Space stuff", "Mars");
         clientService.createClient("Hat co", "Hat making", "Broadstairs");
@@ -88,26 +95,26 @@ public class TestTaskActions {
         // assert tasks owned by this user is of the correct amount
         assertEquals(2, result.size());
         // remove any with wrong id and check count is the same
-        assertEquals(2, result.stream().filter( t -> t.getOwnerId() == 1L).count());
+        assertEquals(2, result.stream().filter(t -> t.getOwnerId() == 1L).count());
     }
 
 
     // expect to succeed as user with id 1 owns this task
     @Test
-    @WithMockCustomUser( id = 1L )
+    @WithMockCustomUser(id = 1L)
     public void testSetCompleted() {
         String taskName = "Fix the rocket";
         clientService.createClient("Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, taskName, 1L);
         taskService.setTaskComplete(1L, 1L, true);
 
-        assertEquals(taskRepo.findAllByOwnerId(1L).get(0).isCompleted(), true);
+        assertEquals(true, taskRepo.findAllByOwnerId(1L).get(0).isCompleted());
     }
 
     // expect to raise exception as user with id 1 should
     // not alter tasks by using owner id 2
-    @Test (expected = AccessDeniedException.class)
-    @WithMockCustomUser( id = 1L )
+    @Test(expected = AccessDeniedException.class)
+    @WithMockCustomUser(id = 1L)
     public void testSetCompletedWhereWrongUserIdUsed() {
         clientService.createClient("Tesla", "Space stuff", "Mars");
         clientService.createClient("Hat co", "Hat making", "Broadstairs");
@@ -123,13 +130,13 @@ public class TestTaskActions {
 
         taskService.setTaskComplete(2L, 2L, true);
 
-        assertEquals(taskRepo.findAllByOwnerId(1L).get(0).isCompleted(), true);
+        assertEquals(true, taskRepo.findAllByOwnerId(1L).get(0).isCompleted());
     }
 
     // expect to raise exception as user with id 1 does not
     // own task with id 2
-    @Test (expected = AccessDeniedException.class)
-    @WithMockCustomUser( id = 1L )
+    @Test(expected = AccessDeniedException.class)
+    @WithMockCustomUser(id = 1L)
     public void testSetCompletedWhereWrongTaskIdUsed() {
         clientService.createClient("Tesla", "Space stuff", "Mars");
         clientService.createClient("Hat co", "Hat making", "Broadstairs");
@@ -148,8 +155,9 @@ public class TestTaskActions {
 
         taskService.setTaskComplete(1L, 2L, true);
 
-        assertEquals(t2.isCompleted(), true);
+        assertEquals(true, t2.isCompleted());
     }
+
 }
 
 

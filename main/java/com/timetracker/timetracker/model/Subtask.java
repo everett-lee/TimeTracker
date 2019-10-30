@@ -31,7 +31,7 @@ public class Subtask {
     private Long totalTime;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subtaskId")
+    @JoinColumn(name = "subtask_fk")
     private List<Subtask> dependsOn;
 
     public String getSubtaskName() {

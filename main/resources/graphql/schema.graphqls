@@ -18,9 +18,11 @@ type Mutation {
            ) : Task!
 
   createSubtask(
+           ownerId: ID!,
+           taskId: ID!,
            subtaskName: String!,
            category: String!
-           dependsOnIds: [Long]!
+           dependsOnIds: [ID]!
          ) : Subtask!
 
   setSubtaskTime(
@@ -38,8 +40,6 @@ type Mutation {
          businessType: String!,
          location: String!
           ): Client!
-
-  createUser(email: String!, password: String!): User
 }
 
 type Task {
