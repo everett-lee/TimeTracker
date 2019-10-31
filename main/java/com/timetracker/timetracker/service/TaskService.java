@@ -1,12 +1,11 @@
 package com.timetracker.timetracker.service;
 
-import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
-import com.timetracker.timetracker.service.exception.ClientNotFoundException;
-import com.timetracker.timetracker.service.exception.TaskNotFoundException;
+import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
+import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;

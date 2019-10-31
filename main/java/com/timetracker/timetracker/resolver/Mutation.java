@@ -8,9 +8,9 @@ import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
 import com.timetracker.timetracker.service.UserService;
-import com.timetracker.timetracker.service.exception.ClientNotFoundException;
-import com.timetracker.timetracker.service.exception.SubtaskNotFoundException;
-import com.timetracker.timetracker.service.exception.TaskNotFoundException;
+import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
+import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
+import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class Mutation implements GraphQLMutationResolver {
     // methods for creating and updating subtask entities
 
     public Subtask createSubtask(Long ownerId, Long taskId, String subtaskName,
-                                 String category, List<Long> dependsOnIds) throws TaskNotFoundException {
+                                 String category, List<Long> dependsOnIds) throws TaskNotFoundException, SubtaskNotFoundException {
         return subtaskService.createSubtask(ownerId, taskId, subtaskName, category, dependsOnIds);
     }
 
@@ -61,7 +61,7 @@ public class Mutation implements GraphQLMutationResolver {
         return subtaskService.setSubtaskTime(ownerId, subtaskId, time);
     }
 
-    public Subtask setSubtaskComplete(Long subtaskId, boolean complete) throws SubtaskNotFoundException {
-        return subtaskService.setSubtaskComplete(subtaskId, complete);
+    public Subtask setSubtaskComplete(Long ownerId, Long subtaskId, boolean complete) throws SubtaskNotFoundException {
+        return subtaskService.setSubtaskComplete(ownerId, subtaskId, complete);
     }
 }

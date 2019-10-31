@@ -52,7 +52,6 @@ public class JwtAuthenticationController {
         }
     }
 
-    // TODO deal with duplicates
     // register a new user to the database
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody User user) throws Exception {

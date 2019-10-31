@@ -13,7 +13,7 @@ import java.util.List;
 public class Subtask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subtaskId")
+    @Column(name = "subtask_id")
     private Long id;
 
     private Long ownerId;
@@ -31,7 +31,7 @@ public class Subtask {
     private Long totalTime;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subtask_fk")
+    @JoinColumn(name = "depend_on_fk")
     private List<Subtask> dependsOn;
 
     public String getSubtaskName() {

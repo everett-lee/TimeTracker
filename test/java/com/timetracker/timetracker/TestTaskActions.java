@@ -8,8 +8,8 @@ import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
-import com.timetracker.timetracker.service.exception.ClientNotFoundException;
-import com.timetracker.timetracker.service.exception.TaskNotFoundException;
+import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
+import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Checks that actions relating to modifying and retrieving
- * tasks can only be performed by owner
+ * tasks are performed correctly
  */
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

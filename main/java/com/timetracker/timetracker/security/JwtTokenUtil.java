@@ -50,7 +50,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
 
-    //generate token for user with email claim TODO: include user id as a claim?
+    //generate token for user with email claim
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
 

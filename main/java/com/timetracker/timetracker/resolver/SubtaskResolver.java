@@ -3,7 +3,7 @@ package com.timetracker.timetracker.resolver;
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.service.SubtaskService;
-import com.timetracker.timetracker.service.exception.SubtaskNotFoundException;
+import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

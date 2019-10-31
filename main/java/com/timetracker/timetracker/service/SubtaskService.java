@@ -4,8 +4,8 @@ import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
-import com.timetracker.timetracker.service.exception.SubtaskNotFoundException;
-import com.timetracker.timetracker.service.exception.TaskNotFoundException;
+import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
+import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SubtaskService {
@@ -29,7 +28,7 @@ public class SubtaskService {
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
     public Subtask createSubtask(Long ownerId, Long taskId, String subtaskName,
-                                 String category, List<Long> dependsOnIds) throws TaskNotFoundException {
+                                 String category, List<Long> dependsOnIds) throws TaskNotFoundException, SubtaskNotFoundException {
 
         Task task = taskRepo.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(String
@@ -40,6 +39,7 @@ public class SubtaskService {
         }
 
         Subtask subtask = new Subtask();
+        subtask.setOwnerId(ownerId);
         subtask.setSubtaskName(subtaskName);
         subtask.setCategory(category);
         subtask.setDateAdded(LocalDate.now());
@@ -47,9 +47,12 @@ public class SubtaskService {
         subtask.setTotalTime(0L);
 
         // add the subtask's dependencies
-        List<Subtask> dependsOn = dependsOnIds.stream()
-                .map( id -> subtaskRepo.findById(id).get())
-                .collect(Collectors.toList());
+        List<Subtask> dependsOn = new ArrayList<>();
+        for (Long id: dependsOnIds) {
+            dependsOn.add(subtaskRepo.findById(id)
+                    .orElseThrow(() -> new SubtaskNotFoundException(String
+                            .format("Subtask with id: %s does not exist", id))));
+        }
         subtask.setDependsOn(dependsOn);
 
         // update the owning task's subtasks to
@@ -78,14 +81,19 @@ public class SubtaskService {
     }
 
     @Transactional
-    public Subtask setSubtaskComplete(Long subtaskId, boolean complete) throws SubtaskNotFoundException {
+    @PreAuthorize("#ownerId == principal.id")
+    public Subtask setSubtaskComplete(Long ownerId, Long subtaskId, boolean complete) throws SubtaskNotFoundException {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(String
                         .format("Subtask with id: %s does not exist", subtaskId)));
 
+        if (subtask.getOwnerId() != ownerId) {
+            throw new AccessDeniedException("User does not have ownership of this Task");
+        }
+
         if (complete) {
             subtask.setDateCompleted(LocalDate.now());
-        // if setting from complete -> not complete date should be null
+        // if setting from complete -> not complete date should be set to null
         } else {
             subtask.setDateCompleted(null);
         }
@@ -95,6 +103,7 @@ public class SubtaskService {
     }
 
     @Transactional(readOnly = true)
+    @PreAuthorize("#subtask.getOwnerId() == principal.id")
     public List<Subtask> dependsOn(Subtask subtask) throws SubtaskNotFoundException {
         List<Subtask> out = new ArrayList<>();
 

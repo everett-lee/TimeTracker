@@ -1,4 +1,4 @@
-package com.timetracker.timetracker.service.exception;
+package com.timetracker.timetracker.service.exceptions;
 
 public class SubtaskNotFoundException extends Exception {
     public SubtaskNotFoundException(String message) {

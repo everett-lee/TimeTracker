@@ -1,7 +1,6 @@
 
 type Query {
     getAllTasks(ownerId: ID): [Task]!
-    findUserByEmail(email: String): User!
 }
 
 type Mutation {
@@ -32,6 +31,7 @@ type Mutation {
          ) : Subtask!
 
   setSubtaskComplete(
+            ownerId: ID!,
             subtaskId: ID!,
             complete: Boolean!
          ) : Subtask!

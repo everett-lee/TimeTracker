@@ -4,7 +4,6 @@ import com.timetracker.timetracker.model.CustomPrincipalUser;
 import com.timetracker.timetracker.repository.UserRepository;
 import com.timetracker.timetracker.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,6 +50,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         newUser.setEmail(user.getEmail());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        // TODO: implement custom exception response for duplicate email / breach of integrity constraint
         userRepo.save(newUser);
 
         return newUser;
