@@ -8,6 +8,8 @@ import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
+import com.timetracker.timetracker.service.exception.ClientNotFoundException;
+import com.timetracker.timetracker.service.exception.TaskNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,7 @@ public class TestTaskActions {
     // owner id
     @Test
     @WithMockCustomUser(id = 1L)
-    public void testCreateTaskValidId() {
+    public void testCreateTaskValidId() throws ClientNotFoundException {
         String taskName = "Fix the rocket";
         clientService.createClient("Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, taskName, 1L);
@@ -58,7 +60,7 @@ public class TestTaskActions {
     // owner id
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 4L)
-    public void testCreateTaskInvalidId() {
+    public void testCreateTaskInvalidId() throws ClientNotFoundException {
         clientService.createClient("Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Fix the rocket", 1L);
     }
@@ -102,7 +104,7 @@ public class TestTaskActions {
     // expect to succeed as user with id 1 owns this task
     @Test
     @WithMockCustomUser(id = 1L)
-    public void testSetCompleted() {
+    public void testSetCompleted() throws ClientNotFoundException, TaskNotFoundException {
         String taskName = "Fix the rocket";
         clientService.createClient("Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, taskName, 1L);
@@ -115,7 +117,7 @@ public class TestTaskActions {
     // not alter tasks by using owner id 2
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 1L)
-    public void testSetCompletedWhereWrongUserIdUsed() {
+    public void testSetCompletedWhereWrongUserIdUsed() throws TaskNotFoundException {
         clientService.createClient("Tesla", "Space stuff", "Mars");
         clientService.createClient("Hat co", "Hat making", "Broadstairs");
 
@@ -137,7 +139,7 @@ public class TestTaskActions {
     // own task with id 2
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 1L)
-    public void testSetCompletedWhereWrongTaskIdUsed() {
+    public void testSetCompletedWhereWrongTaskIdUsed() throws TaskNotFoundException {
         clientService.createClient("Tesla", "Space stuff", "Mars");
         clientService.createClient("Hat co", "Hat making", "Broadstairs");
 

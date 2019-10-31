@@ -4,11 +4,13 @@ import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.timetracker.timetracker.model.Client;
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
-import com.timetracker.timetracker.model.User;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
 import com.timetracker.timetracker.service.UserService;
+import com.timetracker.timetracker.service.exception.ClientNotFoundException;
+import com.timetracker.timetracker.service.exception.SubtaskNotFoundException;
+import com.timetracker.timetracker.service.exception.TaskNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,28 +34,34 @@ public class Mutation implements GraphQLMutationResolver {
         this.userService = userService;
     }
 
-    public Task createTask(Long ownerId, String taskName, Long clientId) {
-        return taskservice.createTask(ownerId, taskName, clientId);
-    }
-
-    public Task setTaskComplete(Long ownerId, Long taskId, boolean complete) {
-        return taskservice.setTaskComplete(ownerId, taskId, complete);
-    }
-
-    public Subtask createSubtask(Long ownerId, Long taskId, String subtaskName,
-                                 String category, List<Long> dependsOnIds) {
-        return subtaskService.createSubtask(ownerId, taskId, subtaskName, category, dependsOnIds);
-    }
+    // methods for creating and updating client entities
 
     public Client createClient(String clientName, String businessType, String location) {
         return clientService.createClient(clientName, businessType, location);
     }
 
-    public Subtask setSubtaskTime(Long subtaskId, Long time) {
-        return subtaskService.setSubtaskTime(subtaskId, time);
+    // methods for creating and updating task entities
+
+    public Task createTask(Long ownerId, String taskName, Long clientId) throws ClientNotFoundException {
+        return taskservice.createTask(ownerId, taskName, clientId);
     }
 
-    public Subtask setSubtaskComplete(Long subtaskId, boolean complete) {
+    public Task setTaskComplete(Long ownerId, Long taskId, boolean complete) throws TaskNotFoundException {
+        return taskservice.setTaskComplete(ownerId, taskId, complete);
+    }
+
+    // methods for creating and updating subtask entities
+
+    public Subtask createSubtask(Long ownerId, Long taskId, String subtaskName,
+                                 String category, List<Long> dependsOnIds) throws TaskNotFoundException {
+        return subtaskService.createSubtask(ownerId, taskId, subtaskName, category, dependsOnIds);
+    }
+
+    public Subtask setSubtaskTime(Long ownerId, Long subtaskId, Long time) throws SubtaskNotFoundException {
+        return subtaskService.setSubtaskTime(ownerId, subtaskId, time);
+    }
+
+    public Subtask setSubtaskComplete(Long subtaskId, boolean complete) throws SubtaskNotFoundException {
         return subtaskService.setSubtaskComplete(subtaskId, complete);
     }
 }

@@ -3,6 +3,7 @@ package com.timetracker.timetracker.resolver;
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.service.SubtaskService;
+import com.timetracker.timetracker.service.exception.SubtaskNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class SubtaskResolver implements GraphQLResolver<Subtask> {
 
     // return the list of Subtasks that this Subtask
     // depends on
-    public List<Subtask> dependsOn(Subtask subtask) {
+    public List<Subtask> dependsOn(Subtask subtask) throws SubtaskNotFoundException {
         return subtaskService.dependsOn(subtask);
     }
 }

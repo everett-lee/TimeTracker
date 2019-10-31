@@ -4,6 +4,8 @@ import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
+import com.timetracker.timetracker.service.exception.SubtaskNotFoundException;
+import com.timetracker.timetracker.service.exception.TaskNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -27,9 +29,11 @@ public class SubtaskService {
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
     public Subtask createSubtask(Long ownerId, Long taskId, String subtaskName,
-                                 String category, List<Long> dependsOnIds) {
+                                 String category, List<Long> dependsOnIds) throws TaskNotFoundException {
 
-        Task task = taskRepo.findById(taskId).get();
+        Task task = taskRepo.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(String
+                        .format("Task with id: % does not exist", taskId)));
 
         if (task.getOwnerId() != ownerId) {
             throw new AccessDeniedException("User does not have ownership of this Task");
@@ -59,25 +63,45 @@ public class SubtaskService {
     }
 
     @Transactional
-    public Subtask setSubtaskTime(Long subtaskId, Long time) {
-        Subtask subtask = subtaskRepo.findById(subtaskId).get();
+    @PreAuthorize("#ownerId == principal.id")
+    public Subtask setSubtaskTime(Long ownerId, Long subtaskId, Long time) throws SubtaskNotFoundException {
+        Subtask subtask = subtaskRepo.findById(subtaskId)
+                .orElseThrow(() -> new SubtaskNotFoundException(String
+                        .format("Subtask with id: %s does not exist", subtaskId)));
+
+        if (subtask.getOwnerId() != ownerId) {
+            throw new AccessDeniedException("User does not have ownership of this Task");
+        }
+
         subtask.setTotalTime(time);
         return subtask;
     }
 
     @Transactional
-    public Subtask setSubtaskComplete(Long subtaskId, boolean complete) {
-        Subtask subtask = subtaskRepo.findById(subtaskId).get();
+    public Subtask setSubtaskComplete(Long subtaskId, boolean complete) throws SubtaskNotFoundException {
+        Subtask subtask = subtaskRepo.findById(subtaskId)
+                .orElseThrow(() -> new SubtaskNotFoundException(String
+                        .format("Subtask with id: %s does not exist", subtaskId)));
+
+        if (complete) {
+            subtask.setDateCompleted(LocalDate.now());
+        // if setting from complete -> not complete date should be null
+        } else {
+            subtask.setDateCompleted(null);
+        }
+
         subtask.setCompleted(complete);
         return subtask;
     }
 
     @Transactional(readOnly = true)
-    public List<Subtask> dependsOn(Subtask subtask) {
+    public List<Subtask> dependsOn(Subtask subtask) throws SubtaskNotFoundException {
         List<Subtask> out = new ArrayList<>();
 
         for (Subtask s: subtask.getDependsOn()) {
-            out.add(subtaskRepo.findById(s.getId()).get());
+            out.add(subtaskRepo.findById(s.getId())
+                    .orElseThrow(() -> new SubtaskNotFoundException(String
+                            .format("Subtask with id: %s in list of dependencies does not exist", s.getId()))));
         }
 
         return out;

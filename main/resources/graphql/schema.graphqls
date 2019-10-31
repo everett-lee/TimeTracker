@@ -26,6 +26,7 @@ type Mutation {
          ) : Subtask!
 
   setSubtaskTime(
+            ownerId: ID!
             subtaskId: ID!,
             time: Long!
          ) : Subtask!

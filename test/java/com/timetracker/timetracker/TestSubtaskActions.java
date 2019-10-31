@@ -8,6 +8,8 @@ import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
+import com.timetracker.timetracker.service.exception.ClientNotFoundException;
+import com.timetracker.timetracker.service.exception.TaskNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +53,7 @@ public class TestSubtaskActions {
     @Test
     @Transactional
     @WithMockCustomUser( id = 1L )
-    public void testCreateTaskValidId() {
+    public void testCreateTaskValidId() throws ClientNotFoundException {
         String taskName = "Fix the rocket";
         clientService.createClient("Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, taskName, 1L);
@@ -64,7 +66,7 @@ public class TestSubtaskActions {
     @Test(expected = AccessDeniedException.class)
     @Transactional
     @WithMockCustomUser( id = 1L )
-    public void testCreateTaskInvalidId() {
+    public void testCreateTaskInvalidId() throws TaskNotFoundException {
         clientService.createClient("Tesla", "Space stuff", "Mars");
 
         Task t = new Task();
@@ -82,7 +84,7 @@ public class TestSubtaskActions {
     @Test
     @Transactional
     @WithMockCustomUser( id = 1L )
-    public void testSubtasksSetValidId() {
+    public void testSubtasksSetValidId() throws ClientNotFoundException, TaskNotFoundException {
         clientService.createClient("Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Bore holes", 1L);
 
