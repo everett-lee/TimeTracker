@@ -28,10 +28,22 @@ public class Subtask {
 
     private boolean completed;
 
+    // the time committed to this subtask
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "subtask_fk")
+    private List<TimeCommit> timeCommits;
+
     private Long totalTime;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "depend_on_fk")
+    // the subtasks this subtask depends on
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "subtask_fk")
     private List<Subtask> dependsOn;
 
     public String getSubtaskName() {
@@ -100,5 +112,13 @@ public class Subtask {
 
     public void setDateCompleted(LocalDate dateCompleted) {
         this.dateCompleted = dateCompleted;
+    }
+
+    public List<TimeCommit> getTimeCommits() {
+        return timeCommits;
+    }
+
+    public void setTimeCommits(List<TimeCommit> timeCommits) {
+        this.timeCommits = timeCommits;
     }
 }

@@ -20,16 +20,19 @@ public class Task {
 
     private String taskName;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "client_fk")
+    @OneToOne
+    @JoinColumn(name = "task_fk")
     private Client client;
 
     private LocalDate dateAdded;
 
     private LocalDate dateCompleted;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn( name = "subtask_fk")
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JoinColumn( name = "tas_fk")
     private List<Subtask> subtasks;
 
     private boolean completed;

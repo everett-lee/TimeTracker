@@ -37,6 +37,11 @@ type Mutation {
             complete: Boolean!
          ) : Subtask!
 
+  createTimeCommit(
+           ownerId: ID!,
+           subtaskId: ID!,
+         ) : TimeCommit!
+
   createClient(
          ownerId: ID!,
          clientName: String!,
@@ -63,8 +68,16 @@ type Subtask {
   dateAdded: String!
   dateCompleted: String
   completed: Boolean!
+  timeCommits: [TimeCommit]!
   totalTime: Long!
   dependsOn: [Subtask]!
+}
+
+type TimeCommit {
+  id: ID!
+  ownerId: ID!
+  date: String!
+  time: Long!
 }
 
 type Client {

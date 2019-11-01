@@ -44,6 +44,7 @@ public class SubtaskService {
         subtask.setCategory(category);
         subtask.setDateAdded(LocalDate.now());
         subtask.setCompleted(false);
+        subtask.setTimeCommits(new ArrayList<>());
         subtask.setTotalTime(0L);
 
         // add the subtask's dependencies
