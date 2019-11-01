@@ -10,6 +10,8 @@ public class Client {
     @Column(name = "client_id")
     private Long id;
 
+    private Long ownerId;
+
     private String clientName;
 
     private String businessType;
@@ -48,4 +50,11 @@ public class Client {
         this.location = location;
     }
 
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
 }

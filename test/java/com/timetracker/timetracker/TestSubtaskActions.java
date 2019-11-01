@@ -59,7 +59,7 @@ public class TestSubtaskActions {
         String taskName = "Fix the rocket";
         String subtaskOneName = "Check the booster";
         String subtaskTwoName = "Buy new rocket fuel";
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, taskName, 1L);
         subtaskService.createSubtask(1L, 1L, subtaskOneName, "Mechanic"
                                      , new ArrayList<>());
@@ -85,7 +85,7 @@ public class TestSubtaskActions {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testCreateSubtaskInvalidId() throws TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
 
         Task t = new Task();
         t.setTaskName("Pick moon rocks");
@@ -101,7 +101,7 @@ public class TestSubtaskActions {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testCreateSubtaskInvalidTasolId() throws TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
 
         Task t = new Task();
         t.setTaskName("Pick moon rocks");
@@ -119,7 +119,7 @@ public class TestSubtaskActions {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testSubtasksSetValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
@@ -139,7 +139,7 @@ public class TestSubtaskActions {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testTimeUpdatedValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
@@ -157,7 +157,7 @@ public class TestSubtaskActions {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testTimeUpdatedTwiceValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
@@ -176,7 +176,7 @@ public class TestSubtaskActions {
     @Transactional
     @WithMockCustomUser( id = 5L )
     public void testTimeUpdatedInvalidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
@@ -193,7 +193,7 @@ public class TestSubtaskActions {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testSubtaskSetCompleteWithValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
@@ -212,7 +212,7 @@ public class TestSubtaskActions {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testSubtaskNotCompletedWithValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());

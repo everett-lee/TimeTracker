@@ -1,6 +1,7 @@
 
 type Query {
     getAllTasks(ownerId: ID): [Task]!
+    getAllClients(ownerId: ID): [Client]!
 }
 
 type Mutation {
@@ -37,6 +38,7 @@ type Mutation {
          ) : Subtask!
 
   createClient(
+         ownerId: ID!,
          clientName: String!,
          businessType: String!,
          location: String!
@@ -67,6 +69,7 @@ type Subtask {
 
 type Client {
   id: ID!
+  ownerId: ID!
   clientName: String!
   businessType: String!
   location: String!

@@ -50,7 +50,7 @@ public class TestTaskActions {
     @WithMockCustomUser(id = 1L)
     public void testCreateTaskValidId() throws ClientNotFoundException {
         String taskName = "Fix the rocket";
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, taskName, 1L);
 
         assertEquals(taskService.getAllTasksByOwnerId(1L).get(0).getTaskName(), taskName);
@@ -61,7 +61,7 @@ public class TestTaskActions {
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 4L)
     public void testCreateTaskInvalidId() throws ClientNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Fix the rocket", 1L);
     }
 
@@ -70,8 +70,8 @@ public class TestTaskActions {
     @Test
     @WithMockCustomUser(id = 1L)
     public void testOnlyOwnedTasksRetrieved() {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
-        clientService.createClient("Hat co", "Hat making", "Broadstairs");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
 
         Task t1 = new Task();
         t1.setTaskName("Fix the rocket");
@@ -106,7 +106,7 @@ public class TestTaskActions {
     @WithMockCustomUser(id = 1L)
     public void testSetCompleted() throws ClientNotFoundException, TaskNotFoundException {
         String taskName = "Fix the rocket";
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, taskName, 1L);
         taskService.setTaskComplete(1L, 1L, true);
 
@@ -118,8 +118,8 @@ public class TestTaskActions {
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 1L)
     public void testSetCompletedWhereWrongUserIdUsed() throws TaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
-        clientService.createClient("Hat co", "Hat making", "Broadstairs");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
 
         Task t1 = new Task();
         t1.setTaskName("Fix the rocket");
@@ -140,8 +140,8 @@ public class TestTaskActions {
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 1L)
     public void testSetCompletedWhereWrongTaskIdUsed() throws TaskNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
-        clientService.createClient("Hat co", "Hat making", "Broadstairs");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
 
         Task t1 = new Task();
         t1.setTaskName("Fix the rocket");

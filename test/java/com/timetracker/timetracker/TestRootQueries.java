@@ -40,7 +40,7 @@ public class TestRootQueries {
     public void testAllTasksTwoEntries() throws ClientNotFoundException {
         String[] taskNames = {"Bore holds", "Blast rocks"};
 
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, taskNames[0], 1L);
         taskService.createTask(1L, taskNames[1], 1L);
 
@@ -60,7 +60,7 @@ public class TestRootQueries {
     @WithMockCustomUser( id = 1L )
     public void testAllTasksNoEntries() {
 
-        clientService.createClient("Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
 
         List<Task> tasks = taskService.getAllTasksByOwnerId(1L);
 
@@ -74,8 +74,8 @@ public class TestRootQueries {
     @Transactional
     @WithMockCustomUser( id = 2L )
     public void testAllTasksTwoEntriesInvalidId() throws ClientNotFoundException {
-        clientService.createClient("Tesla", "Space stuff", "Mars");
-        clientService.createClient("Hat co", "Hat making", "Broadstairs");
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
 
         Task t1 = new Task();
         t1.setTaskName("Fix the rocket");

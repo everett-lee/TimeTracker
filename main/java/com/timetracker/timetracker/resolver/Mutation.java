@@ -36,8 +36,8 @@ public class Mutation implements GraphQLMutationResolver {
 
     // methods for creating and updating client entities
 
-    public Client createClient(String clientName, String businessType, String location) {
-        return clientService.createClient(clientName, businessType, location);
+    public Client createClient(Long ownerId, String clientName, String businessType, String location) {
+        return clientService.createClient(ownerId, clientName, businessType, location);
     }
 
     // methods for creating and updating task entities
