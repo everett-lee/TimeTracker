@@ -4,6 +4,7 @@ import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.timetracker.timetracker.model.Client;
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
+import com.timetracker.timetracker.model.TimeCommit;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
@@ -11,6 +12,9 @@ import com.timetracker.timetracker.service.UserService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
+import com.timetracker.timetracker.service.TimeCommitService;
+import com.timetracker.timetracker.service.exceptions.TimeCommitNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,13 +29,17 @@ public class Mutation implements GraphQLMutationResolver {
     private SubtaskService subtaskService;
     private UserService userService;
     private ClientService clientService;
+    private TimeCommitService timeCommitService;
 
+    @Autowired
     public Mutation(TaskService taskService, SubtaskService subtaskService,
-                    ClientService clientService, UserService userService) {
+                    ClientService clientService, UserService userService,
+                    TimeCommitService timeCommitService) {
         this.subtaskService = subtaskService;
         this.taskservice = taskService;
         this.clientService = clientService;
         this.userService = userService;
+        this.timeCommitService = timeCommitService;
     }
 
     // methods for creating and updating client entities
@@ -63,5 +71,15 @@ public class Mutation implements GraphQLMutationResolver {
 
     public Subtask setSubtaskComplete(Long ownerId, Long subtaskId, boolean complete) throws SubtaskNotFoundException {
         return subtaskService.setSubtaskComplete(ownerId, subtaskId, complete);
+    }
+
+    // methods for creating and updating timecommit entity
+
+    public TimeCommit createTimeCommit(Long ownerId, Long subtaskId) throws SubtaskNotFoundException {
+        return timeCommitService.createTimeCommit(ownerId, subtaskId);
+    }
+
+    public boolean deleteTimeCommit(Long ownerId, Long timeCommitId) throws TimeCommitNotFoundException {
+        return timeCommitService.deleteTimeCommit(ownerId, timeCommitId);
     }
 }

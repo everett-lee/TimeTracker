@@ -2,8 +2,10 @@ package com.timetracker.timetracker.service;
 
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
+import com.timetracker.timetracker.model.TimeCommit;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
+import com.timetracker.timetracker.repository.TimeCommitRepository;
 import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,10 +21,13 @@ import java.util.List;
 public class SubtaskService {
     private SubtaskRepository subtaskRepo;
     private TaskRepository taskRepo;
+    private TimeCommitRepository timeCommitRepo;
 
-    public SubtaskService(SubtaskRepository subtaskRepo, TaskRepository taskrepo) {
+    public SubtaskService(SubtaskRepository subtaskRepo, TaskRepository taskrepo,
+                          TimeCommitRepository timeCommitRepo) {
         this.subtaskRepo = subtaskRepo;
         this.taskRepo = taskrepo;
+        this.timeCommitRepo = timeCommitRepo;
     }
 
     @Transactional
@@ -106,14 +111,12 @@ public class SubtaskService {
     @Transactional(readOnly = true)
     @PreAuthorize("#subtask.getOwnerId() == principal.id")
     public List<Subtask> dependsOn(Subtask subtask) throws SubtaskNotFoundException {
-        List<Subtask> out = new ArrayList<>();
+        return subtask.getDependsOn();
+    }
 
-        for (Subtask s: subtask.getDependsOn()) {
-            out.add(subtaskRepo.findById(s.getId())
-                    .orElseThrow(() -> new SubtaskNotFoundException(String
-                            .format("Subtask with id: %s in list of dependencies does not exist", s.getId()))));
-        }
-
-        return out;
+    @Transactional(readOnly = true)
+    @PreAuthorize("#subtask.getOwnerId() == principal.id")
+    public List<TimeCommit> timeCommits(Subtask subtask) {
+        return subtask.getTimeCommits();
     }
 }

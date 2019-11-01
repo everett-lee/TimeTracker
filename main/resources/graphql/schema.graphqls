@@ -42,6 +42,11 @@ type Mutation {
            subtaskId: ID!,
          ) : TimeCommit!
 
+  deleteTimeCommit(
+           ownerId: ID!,
+           timeCommitId: ID!,
+         ) : Boolean!
+
   createClient(
          ownerId: ID!,
          clientName: String!,

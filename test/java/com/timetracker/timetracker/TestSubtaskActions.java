@@ -2,12 +2,15 @@ package com.timetracker.timetracker;
 
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
+import com.timetracker.timetracker.model.TimeCommit;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
+import com.timetracker.timetracker.repository.TimeCommitRepository;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
+import com.timetracker.timetracker.service.TimeCommitService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
@@ -24,8 +27,11 @@ import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Checks that actions relating to modifying and retrieving
@@ -44,11 +50,15 @@ public class TestSubtaskActions {
     @Autowired
     SubtaskService subtaskService;
     @Autowired
+    TimeCommitService timeCommitService;
+    @Autowired
     TaskRepository taskRepo;
     @Autowired
     ClientRepository clientRepo;
     @Autowired
     SubtaskRepository subtaskRepo;
+    @Autowired
+    TimeCommitRepository timeCommitRepo;
 
     // expect successful addition of subtask where user's id matches task
     // owner id
@@ -225,6 +235,35 @@ public class TestSubtaskActions {
 
         assertEquals(false, subTaskCompleted);
         assertEquals(null, dateCompleted);
+    }
+
+    // check that subtask time commits are returned
+    @Test
+    @Transactional
+    @WithMockCustomUser( id = 1L )
+    public void testSubtaskTimeCommitsReturned() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        taskService.createTask(1L, "Bore holes", 1L);
+
+        subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
+        timeCommitService.createTimeCommit(1L, 1L);
+
+        List<TimeCommit> timeCommits = subtaskService.timeCommits(subtaskRepo.findById(1L).get());
+
+        assertEquals(1, timeCommits.size());
+    }
+
+
+    // check that subtask time commits raises exception for
+    // invalid id
+    @Test(expected = AccessDeniedException.class)
+    @Transactional
+    @WithMockCustomUser( id = 2L )
+    public void testSubtaskTimeCommitsException() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
+
+        subtaskRepo = mock(SubtaskRepository.class);
+        when(subtaskRepo.findById(1L)).thenReturn(java.util.Optional.of(new Subtask()));
+        List<TimeCommit> timeCommits = subtaskService.timeCommits(subtaskRepo.findById(1L).get());
     }
 
 
