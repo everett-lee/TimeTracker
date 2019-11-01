@@ -26,12 +26,7 @@ public class TaskResolver implements GraphQLResolver<Task> {
     public List<Subtask> subtasks(Task task) {
         List<Subtask> out = new ArrayList<>();
 
-        for (Subtask subtask: task.getSubtasks()) {
-            out.add(subtaskRepo
-                    .findById(subtask.getId()).get());
-        }
-
-        return out;
+        return task.getSubtasks();
     }
 
     // return the Client associated with this Task

@@ -29,6 +29,7 @@ public class Task {
     private LocalDate dateCompleted;
 
     @OneToMany(
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )

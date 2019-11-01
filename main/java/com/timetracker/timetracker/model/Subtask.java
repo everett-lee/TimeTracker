@@ -30,6 +30,7 @@ public class Subtask {
 
     // the time committed to this subtask
     @OneToMany(
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
@@ -40,6 +41,7 @@ public class Subtask {
 
     // the subtasks this subtask depends on
     @OneToMany(
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )

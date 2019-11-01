@@ -75,7 +75,7 @@ public class TimeCommitService {
             throw new AccessDeniedException("User does not have ownership of this Task");
         }
 
-        timeCommitRepo.delete(timeCommit);
+        timeCommitRepo.deleteById(timeCommitId);
         return true;
     }
 }
