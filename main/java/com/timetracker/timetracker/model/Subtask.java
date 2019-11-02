@@ -1,5 +1,7 @@
 package com.timetracker.timetracker.model;
 
+import org.hibernate.annotations.Check;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -39,9 +41,7 @@ public class Subtask {
 
     // the subtasks this subtask depends on
     @OneToMany(
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            fetch = FetchType.EAGER
     )
     @JoinColumn(name = "subtask_fk")
     private List<Subtask> dependsOn;

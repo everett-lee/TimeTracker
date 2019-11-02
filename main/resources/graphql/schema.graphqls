@@ -30,6 +30,11 @@ type Mutation {
            dependsOnIds: [ID]!
          ) : Subtask!
 
+  deleteSubtask(
+            ownerId: ID!,
+            subtaskId:ID!
+        ) : Boolean!
+
   setSubtaskComplete(
             ownerId: ID!,
             subtaskId: ID!,
@@ -67,6 +72,7 @@ type Task {
 
 type Subtask {
   id: ID!
+  ownerId: ID!
   subtaskName: String!
   category: String!
   dateAdded: String!

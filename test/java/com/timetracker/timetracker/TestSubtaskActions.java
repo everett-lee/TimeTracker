@@ -12,6 +12,7 @@ import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
 import com.timetracker.timetracker.service.TimeCommitService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
+import com.timetracker.timetracker.service.exceptions.DeletedDependencyException;
 import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
 import org.junit.Test;
@@ -65,7 +66,7 @@ public class TestSubtaskActions {
     @Test
     @Transactional
     @WithMockCustomUser( id = 1L )
-    public void testCreateSubtaskValidId() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
+    public void testCreateSubtask() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
         String taskName = "Fix the rocket";
         String subtaskOneName = "Check the booster";
         String subtaskTwoName = "Buy new rocket fuel";
@@ -108,7 +109,7 @@ public class TestSubtaskActions {
     // expect exception where task owner id does not match user id
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser( id = 1L )
-    public void testCreateSubtaskInvalidTasolId() throws TaskNotFoundException, SubtaskNotFoundException {
+    public void testCreateSubtaskInvalidTaskId() throws TaskNotFoundException, SubtaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
 
         Task t = new Task();
@@ -118,6 +119,51 @@ public class TestSubtaskActions {
         taskRepo.save(t);
 
         subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
+    }
+
+    // expect subtask to be deleted
+    @Test
+    @WithMockCustomUser( id = 1L )
+    public void testDeleteSubtask() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, DeletedDependencyException {
+        String taskName = "Fix the rocket";
+        String subtaskOneName = "Check the booster";
+
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        taskService.createTask(1L, taskName, 1L);
+        subtaskService.createSubtask(1L, 1L, subtaskOneName, "Mechanic"
+                , new ArrayList<>());
+
+        // there is one subtask of the only task
+        assertEquals(1, subtaskRepo.count());
+        assertEquals(1, taskRepo.findById(1L).get().getSubtasks().size());
+
+        subtaskService.deleteSubtask(1L, 1L);
+
+        // there is no subtask
+        assertEquals(0, subtaskRepo.count());
+        assertEquals(0, taskRepo.findById(1L).get().getSubtasks().size());
+    }
+
+
+    // expect subtask deletion to fail if it is a dependency
+    @Test(expected = DeletedDependencyException.class)
+    @WithMockCustomUser( id = 1L )
+    public void testDeleteSubtaskDependencyMaintained() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, DeletedDependencyException {
+        String taskName = "Fix the rocket";
+        String subtaskOneName = "Check the booster";
+        String subtaskTwoName = "Buy new rocket fuel";
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        taskService.createTask(1L, taskName, 1L);
+        subtaskService.createSubtask(1L, 1L, subtaskOneName, "Mechanic"
+                , new ArrayList<>());
+        subtaskService.createSubtask(1L, 1L, subtaskTwoName, "Shopping"
+                , new ArrayList<>(Arrays.asList(1L)));
+
+        // there are two subtasks of the only task
+        assertEquals(2, subtaskRepo.count());
+        assertEquals(2, taskRepo.findById(1L).get().getSubtasks().size());
+
+        subtaskService.deleteSubtask(1L, 1L);
     }
 
 

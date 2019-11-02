@@ -6,6 +6,7 @@ import com.timetracker.timetracker.model.TimeCommit;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.repository.TimeCommitRepository;
+import com.timetracker.timetracker.service.exceptions.DeletedDependencyException;
 import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class SubtaskService {
@@ -68,6 +70,32 @@ public class SubtaskService {
 
         subtaskRepo.save(subtask);
         return subtask;
+    }
+
+    @Transactional
+    @PreAuthorize("#ownerId == principal.id")
+    public boolean deleteSubtask(Long ownerId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException {
+        Subtask subtask = subtaskRepo.findById(subtaskId)
+                .orElseThrow(() -> new SubtaskNotFoundException(String
+                        .format("Subtask with id: %s does not exist", subtaskId)));
+
+        if (subtask.getOwnerId() != ownerId) {
+            throw new AccessDeniedException("User does not have ownership of this Task");
+        }
+
+        // check if any subtask depends on the one that is to be deleted
+        boolean isDependency = subtaskRepo.findByOwnerId(ownerId)
+                .stream().map( st -> st.getDependsOn())
+                .flatMap( arr -> arr.stream())
+                .anyMatch( el -> el.getId() == subtaskId);
+
+        if (isDependency) {
+            throw new DeletedDependencyException(String
+            .format("Another Subtask is dependent on Subtask with id: %s", subtaskId));
+        }
+
+        subtaskRepo.deleteById(subtaskId);
+        return true;
     }
 
     @Transactional

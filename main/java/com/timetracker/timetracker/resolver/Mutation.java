@@ -9,11 +9,8 @@ import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
 import com.timetracker.timetracker.service.UserService;
-import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
-import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
-import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
+import com.timetracker.timetracker.service.exceptions.*;
 import com.timetracker.timetracker.service.TimeCommitService;
-import com.timetracker.timetracker.service.exceptions.TimeCommitNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -69,6 +66,9 @@ public class Mutation implements GraphQLMutationResolver {
         return subtaskService.createSubtask(ownerId, taskId, subtaskName, category, dependsOnIds);
     }
 
+    public boolean deleteSubtask(Long ownerId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException {
+        return  subtaskService.deleteSubtask(ownerId, subtaskId);
+    }
     public Subtask setSubtaskComplete(Long ownerId, Long subtaskId, boolean complete) throws SubtaskNotFoundException {
         return subtaskService.setSubtaskComplete(ownerId, subtaskId, complete);
     }
