@@ -18,8 +18,8 @@ import java.util.List;
 
 @Component
 /**
- * Handles actions that modify state in some way,
- * by creating or altering records.
+ * Handle actions that modify state in some way,
+ * by creating, deleting or altering records.
  */
 public class Mutation implements GraphQLMutationResolver {
     private TaskService taskservice;
@@ -43,6 +43,10 @@ public class Mutation implements GraphQLMutationResolver {
 
     public Client createClient(Long ownerId, String clientName, String businessType, String location) {
         return clientService.createClient(ownerId, clientName, businessType, location);
+    }
+
+    public boolean deleteClient(Long ownerId, Long clientId) throws ClientNotFoundException {
+        return clientService.deleteClient(ownerId, clientId);
     }
 
     // methods for creating and updating task entities
@@ -73,7 +77,7 @@ public class Mutation implements GraphQLMutationResolver {
         return subtaskService.setSubtaskComplete(ownerId, subtaskId, complete);
     }
 
-    // methods for creating and updating timecommit entity
+    // methods for creating and updating timecommit entities
 
     public TimeCommit createTimeCommit(Long ownerId, Long subtaskId) throws SubtaskNotFoundException {
         return timeCommitService.createTimeCommit(ownerId, subtaskId);

@@ -80,7 +80,7 @@ public class SubtaskService {
                         .format("Subtask with id: %s does not exist", subtaskId)));
 
         if (subtask.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this Task");
+            throw new AccessDeniedException("User does not have ownership of this Subtask");
         }
 
         // check if any subtask depends on the one that is to be deleted
@@ -106,7 +106,7 @@ public class SubtaskService {
                         .format("Subtask with id: %s does not exist", subtaskId)));
 
         if (subtask.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this Task");
+            throw new AccessDeniedException("User does not have ownership of this Subtask");
         }
 
         if (complete) {

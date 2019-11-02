@@ -44,11 +44,10 @@ public class JwtTokenUtil implements Serializable {
     }
 
     //check if the token has expired
-    private Boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
-
 
     //generate token for user with email claim
     public String generateToken(UserDetails userDetails) {
@@ -68,7 +67,7 @@ public class JwtTokenUtil implements Serializable {
 
     // validate by comparing email/username with that supplied
     // in the token
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         final String email = getEmailFromToken(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }

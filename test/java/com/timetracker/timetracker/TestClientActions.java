@@ -1,8 +1,6 @@
 package com.timetracker.timetracker;
 
 import com.timetracker.timetracker.model.Client;
-import com.timetracker.timetracker.model.Subtask;
-import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
@@ -10,17 +8,17 @@ import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
-import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
-import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,6 +69,42 @@ public class TestClientActions {
         clientService.createClient(1L, name, "Soundtracks", "UK");
 
         assertEquals(name, clientRepo.findById(1L).get().getClientName());
+    }
+
+    // expect client to be deleted
+    @Test
+    @WithMockCustomUser( id = 1L )
+    public void testDeleteClient() throws ClientNotFoundException {
+        String name = "Thom Yorke";
+        clientService.createClient(1L, name, "Soundtracks", "UK");
+
+        assertEquals(1, clientRepo.count());
+        clientService.deleteClient(1L, 1L);
+        assertEquals(0, clientRepo.count());
+    }
+
+    // expect deletion to fail due to wrong owner id
+    @Test(expected = AccessDeniedException.class)
+    @WithMockCustomUser( id = 2L )
+    public void testDeleteClientInvalidId() throws ClientNotFoundException {
+        Client c1 = new Client();
+        c1.setOwnerId(1L);
+        c1.setLocation("");
+        c1.setBusinessType("");
+        c1.setClientName("");
+
+        clientService.deleteClient(1L, 1L);
+    }
+
+    // expect deletion to fail due to task -> client relationship
+    @Test (expected =  DataIntegrityViolationException.class)
+    @WithMockCustomUser( id = 1L )
+    public void testDeleteClientWithRelationship() throws ClientNotFoundException {
+        String name = "Thom Yorke";
+        clientService.createClient(1L, name, "Soundtracks", "UK");
+        taskService.createTask(1L, "", 1L);
+
+        clientService.deleteClient(1L, 1L);
     }
 
     @Test

@@ -24,7 +24,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.AuthenticationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -142,6 +141,20 @@ public class TestSubtaskActions {
         // there is no subtask
         assertEquals(0, subtaskRepo.count());
         assertEquals(0, taskRepo.findById(1L).get().getSubtasks().size());
+    }
+
+    // expect deletion to fail due to wrong id
+    @Test(expected = AccessDeniedException.class)
+    @WithMockCustomUser( id = 2L )
+    public void testDeleteSubtaskWrongId() throws DeletedDependencyException, SubtaskNotFoundException {
+        Subtask subtask = new Subtask();
+        subtask.setOwnerId(3L);
+        subtaskRepo.save(subtask);
+
+        // there is one subtask of the only task
+        assertEquals(1, subtaskRepo.count());
+
+        subtaskService.deleteSubtask(3L, 1L);
     }
 
 

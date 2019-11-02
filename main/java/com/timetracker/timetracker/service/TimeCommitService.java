@@ -37,7 +37,7 @@ public class TimeCommitService {
                         .format("Subtask with id: %s does not exist", subtaskId)));
 
         if (subtask.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this Task");
+            throw new AccessDeniedException("User does not have ownership of this Subtask");
         }
 
         // check if there is an existing time commit for the same date
@@ -72,7 +72,7 @@ public class TimeCommitService {
                 .format("TimeCommit with id: %s does not exist", timeCommitId))));
 
         if (timeCommit.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this Task");
+            throw new AccessDeniedException("User does not have ownership of this TimeCommit");
         }
 
         timeCommitRepo.deleteById(timeCommitId);

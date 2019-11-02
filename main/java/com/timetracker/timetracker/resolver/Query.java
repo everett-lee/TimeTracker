@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Root query class that returns the Tasks owned
- * by the current user.
+ * Root query class
  */
 @Component
 public class Query implements GraphQLQueryResolver {

@@ -57,6 +57,11 @@ type Mutation {
          businessType: String!,
          location: String!
           ): Client!
+
+  deleteClient(
+           ownerId: ID!,
+           clientId: ID!,
+         ) : Boolean!
 }
 
 type Task {

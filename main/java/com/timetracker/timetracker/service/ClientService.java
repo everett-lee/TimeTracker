@@ -2,6 +2,8 @@ package com.timetracker.timetracker.service;
 
 import com.timetracker.timetracker.model.Client;
 import com.timetracker.timetracker.repository.ClientRepository;
+import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,21 @@ public class ClientService {
         clientRepo.save(client);
 
         return client;
+    }
+
+    @Transactional
+    @PreAuthorize("#ownerId == principal.id")
+    public boolean deleteClient(Long ownerId, Long clientId) throws ClientNotFoundException {
+        Client client = clientRepo.findById(clientId)
+                .orElseThrow( () -> new ClientNotFoundException(String
+                .format("Client with id: %s not found", clientId)));
+
+        if (client.getOwnerId() != ownerId) {
+            throw new AccessDeniedException("User does not have ownership of this Client");
+        }
+
+        clientRepo.deleteById(clientId);
+        return true;
     }
 
     @Transactional(readOnly = true)
