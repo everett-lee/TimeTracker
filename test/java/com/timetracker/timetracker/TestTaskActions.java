@@ -1,6 +1,7 @@
 package com.timetracker.timetracker;
 
 
+import com.timetracker.timetracker.model.Client;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
@@ -48,7 +49,7 @@ public class TestTaskActions {
     // owner id
     @Test
     @WithMockCustomUser(id = 1L)
-    public void testCreateTaskValidId() throws ClientNotFoundException {
+    public void testCreateTask() throws ClientNotFoundException {
         String taskName = "Fix the rocket";
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, taskName, 1L);
@@ -64,6 +65,49 @@ public class TestTaskActions {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Fix the rocket", 1L);
     }
+
+    // expect task to be deleted
+    @Test
+    @WithMockCustomUser(id = 1L)
+    public void testDeleteSubtask() throws ClientNotFoundException, TaskNotFoundException {
+        String taskName = "Fix the rocket";
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        taskService.createTask(1L, taskName, 1L);
+
+        assertEquals(1, taskRepo.count());
+
+        taskService.deleteTask(1L, 1L);
+
+        assertEquals(0, taskRepo.count());
+    }
+
+    // expect task deletion to fail due to invalid task id
+    @Test(expected = AccessDeniedException.class)
+    @WithMockCustomUser(id = 2L)
+    public void testDeleteSubtaskInvalidId() throws ClientNotFoundException, TaskNotFoundException {
+        clientRepo.save(new Client());
+        Task t = new Task();
+        t.setOwnerId(1L);
+        taskRepo.save(t);
+
+        assertEquals(1, taskRepo.count());
+        taskService.deleteTask(2L, 1L);
+    }
+
+    // expect task deletion to fail due to invalid owner id
+    @Test(expected = AccessDeniedException.class)
+    @WithMockCustomUser(id = 2L)
+    public void testDeleteSubtaskInvalidTaskId() throws ClientNotFoundException, TaskNotFoundException {
+        clientRepo.save(new Client());
+        Task t = new Task();
+        t.setOwnerId(1L);
+        taskRepo.save(t);
+
+        assertEquals(1, taskRepo.count());
+        taskService.deleteTask(1L, 1L);
+    }
+
+
 
     // expect successful addition of task where user's id matches task
     // owner id
@@ -117,7 +161,7 @@ public class TestTaskActions {
     // not alter tasks by using owner id 2
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 1L)
-    public void testSetCompletedWhereWrongUserIdUsed() throws TaskNotFoundException {
+    public void testSetCompletedInvalidOwnerId() throws TaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
 
@@ -139,7 +183,7 @@ public class TestTaskActions {
     // own task with id 2
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 1L)
-    public void testSetCompletedWhereWrongTaskIdUsed() throws TaskNotFoundException {
+    public void testSetCompletedInvalidTaskId() throws TaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
 

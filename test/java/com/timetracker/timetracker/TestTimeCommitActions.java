@@ -22,9 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -55,7 +53,6 @@ public class TestTimeCommitActions {
 
     // expect successful creation of time commit
     @Test
-    @Transactional
     @WithMockCustomUser(id = 1L)
     public void testCreateTimeCommit() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
@@ -68,8 +65,7 @@ public class TestTimeCommitActions {
     }
 
     // expect single time commit for duplicate date
-    @Test(expected = AccessDeniedException.class)
-    @Transactional
+    @Test
     @WithMockCustomUser(id = 1L)
     public void testCreateTimeCommitDuplicate() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
@@ -83,8 +79,7 @@ public class TestTimeCommitActions {
     }
 
     // expect successful creation fails with invalid owner id
-    @Test
-    @Transactional
+    @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 2L)
     public void testCreateTimeCommitinvalidId() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
         subtaskRepo = mock(SubtaskRepository.class);

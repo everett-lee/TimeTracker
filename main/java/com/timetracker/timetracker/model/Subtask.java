@@ -37,8 +37,6 @@ public class Subtask {
     @JoinColumn(name = "subtask_fk")
     private List<TimeCommit> timeCommits;
 
-    private Long totalTime;
-
     // the subtasks this subtask depends on
     @OneToMany(
             fetch = FetchType.EAGER,
@@ -78,14 +76,6 @@ public class Subtask {
 
     public void setDependsOn(List<Subtask> dependsOn) {
         this.dependsOn = dependsOn;
-    }
-
-    public Long getTotalTime() {
-        return totalTime;
-    }
-
-    public void setTotalTime(Long totalTime) {
-        this.totalTime = totalTime;
     }
 
     public Long getId() {

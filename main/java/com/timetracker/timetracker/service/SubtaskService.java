@@ -50,7 +50,6 @@ public class SubtaskService {
         subtask.setDateAdded(LocalDate.now());
         subtask.setCompleted(false);
         subtask.setTimeCommits(new ArrayList<>());
-        subtask.setTotalTime(0L);
 
         // add the subtask's dependencies
         List<Subtask> dependsOn = new ArrayList<>();
@@ -68,21 +67,6 @@ public class SubtaskService {
         task.setSubtasks(subtasks);
 
         subtaskRepo.save(subtask);
-        return subtask;
-    }
-
-    @Transactional
-    @PreAuthorize("#ownerId == principal.id")
-    public Subtask setSubtaskTime(Long ownerId, Long subtaskId, Long time) throws SubtaskNotFoundException {
-        Subtask subtask = subtaskRepo.findById(subtaskId)
-                .orElseThrow(() -> new SubtaskNotFoundException(String
-                        .format("Subtask with id: %s does not exist", subtaskId)));
-
-        if (subtask.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this Task");
-        }
-
-        subtask.setTotalTime(time);
         return subtask;
     }
 

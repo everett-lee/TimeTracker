@@ -92,7 +92,6 @@ public class TestSubtaskActions {
 
     // expect exception where subtask owner id does not match user id
     @Test(expected = AccessDeniedException.class)
-    @Transactional
     @WithMockCustomUser( id = 1L )
     public void testCreateSubtaskInvalidId() throws TaskNotFoundException, SubtaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
@@ -108,7 +107,6 @@ public class TestSubtaskActions {
 
     // expect exception where task owner id does not match user id
     @Test(expected = AccessDeniedException.class)
-    @Transactional
     @WithMockCustomUser( id = 1L )
     public void testCreateSubtaskInvalidTasolId() throws TaskNotFoundException, SubtaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
@@ -126,7 +124,6 @@ public class TestSubtaskActions {
     // test to check owner Task's subtasks are updated to reflect new
     // additions
     @Test
-    @Transactional
     @WithMockCustomUser( id = 1L )
     public void testSubtasksSetValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
@@ -144,63 +141,8 @@ public class TestSubtaskActions {
         assertEquals(2, t1.getSubtasks().size());
     }
 
-    // check that subtask time is updated correctly
-    @Test
-    @Transactional
-    @WithMockCustomUser( id = 1L )
-    public void testTimeUpdatedValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
-
-        subtaskService.setSubtaskTime(1L, 1L, 100L);
-
-        Long subtaskTime = subtaskRepo.findById(1L).get().getTotalTime();
-
-        assertEquals(Long.valueOf(100), subtaskTime);
-    }
-
-
-    // check that subtask time is correct following multiple updates
-    @Test
-    @Transactional
-    @WithMockCustomUser( id = 1L )
-    public void testTimeUpdatedTwiceValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
-
-        subtaskService.setSubtaskTime(1L, 1L, 100L);
-        subtaskService.setSubtaskTime(1L, 1L, 0L);
-
-        Long subtaskTime = subtaskRepo.findById(1L).get().getTotalTime();
-
-        assertEquals(Long.valueOf(0), subtaskTime);
-    }
-
-
-    // check time update fails where invalid id is used
-    @Test( expected = AccessDeniedException.class )
-    @Transactional
-    @WithMockCustomUser( id = 5L )
-    public void testTimeUpdatedInvalidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
-
-        subtaskService.setSubtaskTime(1L, 1L, 100L);
-
-        Long subtaskTime = subtaskRepo.findById(1L).get().getTotalTime();
-
-        assertEquals(Long.valueOf(100), subtaskTime);
-    }
-
     // check that subtask set as complete
     @Test
-    @Transactional
     @WithMockCustomUser( id = 1L )
     public void testSubtaskSetCompleteWithValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
@@ -219,7 +161,6 @@ public class TestSubtaskActions {
 
     // check that subtask set as not complete after two changes
     @Test
-    @Transactional
     @WithMockCustomUser( id = 1L )
     public void testSubtaskNotCompletedWithValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
@@ -239,7 +180,6 @@ public class TestSubtaskActions {
 
     // check that subtask time commits are returned
     @Test
-    @Transactional
     @WithMockCustomUser( id = 1L )
     public void testSubtaskTimeCommitsReturned() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
@@ -257,7 +197,6 @@ public class TestSubtaskActions {
     // check that subtask time commits raises exception for
     // invalid id
     @Test(expected = AccessDeniedException.class)
-    @Transactional
     @WithMockCustomUser( id = 2L )
     public void testSubtaskTimeCommitsException() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
 

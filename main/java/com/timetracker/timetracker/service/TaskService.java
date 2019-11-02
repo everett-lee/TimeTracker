@@ -51,8 +51,22 @@ public class TaskService {
 
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
-    public Task setTaskComplete(Long ownerId, Long taskId, boolean complete) throws TaskNotFoundException {
+    public boolean deleteTask(Long ownerId, Long taskId) throws TaskNotFoundException {
+        Task task  = taskRepo.findById(taskId)
+                .orElseThrow( () -> new TaskNotFoundException(String.
+                        format("Task with id: % does not exist", taskId)));
 
+        if (task.getOwnerId() != ownerId) {
+            throw new AccessDeniedException("User does not have ownership of this Task");
+        }
+
+        taskRepo.deleteById(taskId);
+        return true;
+    }
+
+    @Transactional
+    @PreAuthorize("#ownerId == principal.id")
+    public Task setTaskComplete(Long ownerId, Long taskId, boolean complete) throws TaskNotFoundException {
         Task task = taskRepo
                 .findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(String

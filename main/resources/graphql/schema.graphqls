@@ -11,6 +11,11 @@ type Mutation {
            clientId: Long!
          ) : Task!
 
+  deleteTask(
+            ownerId: ID!,
+            taskId:ID!
+        ) : Boolean!
+
   setTaskComplete(
               ownerId: ID!,
               taskId: ID!,
@@ -23,12 +28,6 @@ type Mutation {
            subtaskName: String!,
            category: String!
            dependsOnIds: [ID]!
-         ) : Subtask!
-
-  setSubtaskTime(
-            ownerId: ID!
-            subtaskId: ID!,
-            time: Long!
          ) : Subtask!
 
   setSubtaskComplete(
@@ -74,7 +73,6 @@ type Subtask {
   dateCompleted: String
   completed: Boolean!
   timeCommits: [TimeCommit]!
-  totalTime: Long!
   dependsOn: [Subtask]!
 }
 

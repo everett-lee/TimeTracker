@@ -54,6 +54,10 @@ public class Mutation implements GraphQLMutationResolver {
         return taskservice.createTask(ownerId, taskName, clientId);
     }
 
+    public boolean deleteTask(Long ownerId, Long taskId) throws TaskNotFoundException {
+        return taskservice.deleteTask(ownerId, taskId);
+    }
+
     public Task setTaskComplete(Long ownerId, Long taskId, boolean complete) throws TaskNotFoundException {
         return taskservice.setTaskComplete(ownerId, taskId, complete);
     }
@@ -63,10 +67,6 @@ public class Mutation implements GraphQLMutationResolver {
     public Subtask createSubtask(Long ownerId, Long taskId, String subtaskName,
                                  String category, List<Long> dependsOnIds) throws TaskNotFoundException, SubtaskNotFoundException {
         return subtaskService.createSubtask(ownerId, taskId, subtaskName, category, dependsOnIds);
-    }
-
-    public Subtask setSubtaskTime(Long ownerId, Long subtaskId, Long time) throws SubtaskNotFoundException {
-        return subtaskService.setSubtaskTime(ownerId, subtaskId, time);
     }
 
     public Subtask setSubtaskComplete(Long ownerId, Long subtaskId, boolean complete) throws SubtaskNotFoundException {
