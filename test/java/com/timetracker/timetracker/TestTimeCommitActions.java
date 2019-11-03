@@ -1,6 +1,5 @@
 package com.timetracker.timetracker;
 
-
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.TimeCommit;
 import com.timetracker.timetracker.repository.ClientRepository;
@@ -22,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -127,5 +127,22 @@ public class TestTimeCommitActions {
         assertEquals(1, timeCommitRepo.count());
 
         timeCommitService.deleteTimeCommit(1L, 1L);
+    }
+
+    // expect successful update of time
+    @Test
+    @Transactional
+    @WithMockCustomUser(id = 1L)
+    public void testUpdateTime() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, TimeCommitNotFoundException {
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        taskService.createTask(1L, "Bore holes", 1L);
+        subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
+        timeCommitService.createTimeCommit(1L, 1L);
+
+        TimeCommit timeCommit = timeCommitRepo.findById(1L).get();
+
+        assertEquals(Long.valueOf(0), timeCommit.getTime());
+        timeCommitService.updateTime(1L, 1L, 5L);
+        assertEquals(Long.valueOf(5), timeCommit.getTime());
     }
 }

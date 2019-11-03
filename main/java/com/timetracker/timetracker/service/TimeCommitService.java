@@ -28,7 +28,6 @@ public class TimeCommitService {
         this.subtaskRepo = subtaskRepo;
     }
 
-
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
     public TimeCommit createTimeCommit(Long ownerId, Long subtaskId) throws SubtaskNotFoundException {
@@ -77,5 +76,20 @@ public class TimeCommitService {
 
         timeCommitRepo.deleteById(timeCommitId);
         return true;
+    }
+
+    @Transactional
+    @PreAuthorize("#ownerId == principal.id")
+    public TimeCommit updateTime(Long ownerId, Long timeCommitId, Long time) throws TimeCommitNotFoundException {
+        TimeCommit timeCommit = timeCommitRepo.findById(timeCommitId)
+                .orElseThrow( () -> new TimeCommitNotFoundException(String
+        .format("Time commit with id: %s does not exist", timeCommitId)));
+
+        if (timeCommit.getOwnerId() != ownerId) {
+            throw new AccessDeniedException("User does not have ownership of this TimeCommit");
+        }
+
+        timeCommit.setTime(time);
+        return timeCommit;
     }
 }

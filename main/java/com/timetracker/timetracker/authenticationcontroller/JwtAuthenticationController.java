@@ -6,6 +6,7 @@ import com.timetracker.timetracker.security.JwtResponse;
 import com.timetracker.timetracker.security.JwtTokenUtil;
 import com.timetracker.timetracker.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -54,7 +55,16 @@ public class JwtAuthenticationController {
 
     // register a new user to the database
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<?> saveUser(@RequestBody User user) {
-        return ResponseEntity.ok(userDetailsService.save(user));
+    public ResponseEntity<UserDetailsResponse> saveUser(@RequestBody User user) throws DuplicateUserException {
+
+        User savedUser;
+        try {
+            savedUser = userDetailsService.save(user);
+        } catch (DataIntegrityViolationException ex) {
+            // throw error if user with this email already exists
+            throw new DuplicateUserException(user.getEmail());
+        }
+
+        return ResponseEntity.ok(new UserDetailsResponse(savedUser));
     }
 }

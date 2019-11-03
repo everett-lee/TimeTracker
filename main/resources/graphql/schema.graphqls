@@ -51,6 +51,12 @@ type Mutation {
            timeCommitId: ID!,
          ) : Boolean!
 
+  updateTime(
+            ownerId: ID!,
+            timeCommitId: ID!,
+            time: Long!
+           ) : TimeCommit!
+
   createClient(
          ownerId: ID!,
          clientName: String!,

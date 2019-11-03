@@ -10,8 +10,13 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(unique=true)
+    @Column(unique = true,
+            nullable = false)
     private String email;
+
+    // stored as hash
+    @Column(nullable = false)
+    private String password;
 
     // no-arg constructor used by default
     public User() {
@@ -23,9 +28,6 @@ public class User {
         this.email = email;
         this.password = "password";
     }
-
-    // stored as hash
-    private String password;
 
     public Long getId() {
         return id;

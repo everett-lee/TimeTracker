@@ -8,7 +8,7 @@ import com.timetracker.timetracker.model.TimeCommit;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
-import com.timetracker.timetracker.service.UserService;
+//import com.timetracker.timetracker.service.UserService;
 import com.timetracker.timetracker.service.exceptions.*;
 import com.timetracker.timetracker.service.TimeCommitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +18,22 @@ import java.util.List;
 
 @Component
 /**
- * Handle actions that modify state in some way,
+ * handles actions that modify state in some way,
  * by creating, deleting or altering records.
  */
 public class Mutation implements GraphQLMutationResolver {
     private TaskService taskservice;
     private SubtaskService subtaskService;
-    private UserService userService;
     private ClientService clientService;
     private TimeCommitService timeCommitService;
 
     @Autowired
     public Mutation(TaskService taskService, SubtaskService subtaskService,
-                    ClientService clientService, UserService userService,
+                    ClientService clientService,
                     TimeCommitService timeCommitService) {
         this.subtaskService = subtaskService;
         this.taskservice = taskService;
         this.clientService = clientService;
-        this.userService = userService;
         this.timeCommitService = timeCommitService;
     }
 
@@ -85,5 +83,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     public boolean deleteTimeCommit(Long ownerId, Long timeCommitId) throws TimeCommitNotFoundException {
         return timeCommitService.deleteTimeCommit(ownerId, timeCommitId);
+    }
+
+    public TimeCommit updateTime(Long ownerId, Long timeCommitId, Long time) throws TimeCommitNotFoundException {
+        return timeCommitService.updateTime(ownerId, timeCommitId, time);
     }
 }
