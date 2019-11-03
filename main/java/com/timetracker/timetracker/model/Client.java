@@ -2,6 +2,9 @@ package com.timetracker.timetracker.model;
 
 import javax.persistence.*;
 
+/**
+ * The client associated with a Task
+ */
 @Entity
 @Table(name = "client")
 public class Client {

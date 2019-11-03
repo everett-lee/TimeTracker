@@ -1,17 +1,15 @@
 package com.timetracker.timetracker.model;
 
-import org.hibernate.annotations.Check;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
-@Table(name = "subtask")
 /**
  * Subtasks define the work involved in completing
- * a task. Each has an associated category.
+ * a Task. Each has an associated category.
  */
+@Entity
+@Table(name = "subtask")
 public class Subtask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

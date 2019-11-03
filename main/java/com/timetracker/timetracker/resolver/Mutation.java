@@ -18,7 +18,7 @@ import java.util.List;
 
 @Component
 /**
- * handles actions that modify state in some way,
+ * Handles actions that modify state in some way,
  * by creating, deleting or altering records.
  */
 public class Mutation implements GraphQLMutationResolver {

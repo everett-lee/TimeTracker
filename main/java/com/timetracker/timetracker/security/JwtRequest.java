@@ -3,14 +3,14 @@ package com.timetracker.timetracker.security;
 import java.io.Serializable;
 
 /**
- * encapsulates user's log in details sent
+ * Encapsulates user's log in details sent
  * by the client to the authentication endpoint
  */
 public class JwtRequest implements Serializable {
     private String email;
     private String password;
 
-    //need default constructor for JSON Parsing
+    // need default constructor for JSON Parsing
     public JwtRequest() {
     }
 

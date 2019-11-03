@@ -17,8 +17,11 @@ public class TimeCommit {
 
     private Long ownerId;
 
+    // date of the time commit
     private LocalDate date;
 
+    // the time spent on the subtask
+    // on this date in milliseconds
     private Long time;
 
     public Long getId() {

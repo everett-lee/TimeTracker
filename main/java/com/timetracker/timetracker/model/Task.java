@@ -4,12 +4,12 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
-@Table(name = "task")
 /**
  *  Top level task. This represents the overall goal
  *  and has a single client and one or more subtasks.
  */
+@Entity
+@Table(name = "task")
 public class Task {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -28,6 +28,7 @@ public class Task {
 
     private LocalDate dateCompleted;
 
+    // the Subtasks that compose this Task
     @OneToMany(
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
