@@ -45,7 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder);
     }
 
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -62,9 +61,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     // all others must be authenticated
                     .anyRequest().authenticated()
                     .and()
-                    // session is not used to store user's state.
                     .exceptionHandling()
-                    .authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+                     // session is not used to store user's state.
+                    .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // add a filter to validate the tokens with every request

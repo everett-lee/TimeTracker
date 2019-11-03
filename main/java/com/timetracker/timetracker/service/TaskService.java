@@ -21,6 +21,8 @@ public class TaskService {
     private SubtaskRepository subtaskRepo;
     private ClientRepository clientRepo;
 
+    private String ACCESS_DENIED_MESSAGE = "User does not have ownership of this ";
+
     public TaskService(TaskRepository taskRepo, ClientRepository clientRepo,
                        SubtaskRepository subtaskRepo) {
         this.taskRepo = taskRepo;
@@ -38,8 +40,7 @@ public class TaskService {
 
         task.setClient(clientRepo
                 .findById(clientId)
-                .orElseThrow(() ->
-                        new ClientNotFoundException(String.format("Client with id: %s does not exist", clientId))));
+                .orElseThrow(() -> new ClientNotFoundException(clientId)));
 
         task.setDateAdded(LocalDate.now());
         task.setCompleted(false);
@@ -53,11 +54,10 @@ public class TaskService {
     @PreAuthorize("#ownerId == principal.id")
     public boolean deleteTask(Long ownerId, Long taskId) throws TaskNotFoundException {
         Task task  = taskRepo.findById(taskId)
-                .orElseThrow( () -> new TaskNotFoundException(String.
-                        format("Task with id: % does not exist", taskId)));
+                .orElseThrow( () -> new TaskNotFoundException(taskId));
 
         if (task.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this Task");
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
         }
 
         taskRepo.deleteById(taskId);
@@ -69,11 +69,10 @@ public class TaskService {
     public Task setTaskComplete(Long ownerId, Long taskId, boolean complete) throws TaskNotFoundException {
         Task task = taskRepo
                 .findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(String
-                        .format("Task with id: % does not exist", taskId)));
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
 
         if (task.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this Task");
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
         }
 
         if (complete) {

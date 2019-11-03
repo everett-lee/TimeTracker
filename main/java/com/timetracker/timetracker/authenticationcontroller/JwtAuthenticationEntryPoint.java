@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Component
 /**
- * respond with 401 status if request not authenticated
+ * respond with 401 code if request not authenticated
  */
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
     @Override

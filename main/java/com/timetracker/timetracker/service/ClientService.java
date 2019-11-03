@@ -14,6 +14,8 @@ import java.util.List;
 public class ClientService {
     private ClientRepository clientRepo;
 
+    private String ACCESS_DENIED_MESSAGE = "User does not have ownership of this ";
+
     public ClientService(ClientRepository clientRepo) {
         this.clientRepo = clientRepo;
     }
@@ -36,11 +38,10 @@ public class ClientService {
     @PreAuthorize("#ownerId == principal.id")
     public boolean deleteClient(Long ownerId, Long clientId) throws ClientNotFoundException {
         Client client = clientRepo.findById(clientId)
-                .orElseThrow( () -> new ClientNotFoundException(String
-                .format("Client with id: %s not found", clientId)));
+                .orElseThrow( () -> new ClientNotFoundException(clientId));
 
         if (client.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this Client");
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Client");
         }
 
         clientRepo.deleteById(clientId);

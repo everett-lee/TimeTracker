@@ -19,8 +19,10 @@ import java.util.Optional;
 
 @Service
 public class TimeCommitService {
-    TimeCommitRepository timeCommitRepo;
-    SubtaskRepository subtaskRepo;
+    private TimeCommitRepository timeCommitRepo;
+    private SubtaskRepository subtaskRepo;
+
+    private String ACCESS_DENIED_MESSAGE = "User does not have ownership of this ";
 
     @Autowired
     public TimeCommitService(TimeCommitRepository timeCommitRepo, SubtaskRepository subtaskRepo) {
@@ -32,11 +34,10 @@ public class TimeCommitService {
     @PreAuthorize("#ownerId == principal.id")
     public TimeCommit createTimeCommit(Long ownerId, Long subtaskId) throws SubtaskNotFoundException {
         Subtask subtask = subtaskRepo.findById(subtaskId)
-                .orElseThrow(() -> new SubtaskNotFoundException(String
-                        .format("Subtask with id: %s does not exist", subtaskId)));
+                .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
         if (subtask.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this Subtask");
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "subtask");
         }
 
         // check if there is an existing time commit for the same date
@@ -67,11 +68,10 @@ public class TimeCommitService {
     @PreAuthorize("#ownerId == principal.id")
     public boolean deleteTimeCommit(Long ownerId, Long timeCommitId) throws TimeCommitNotFoundException {
         TimeCommit timeCommit = timeCommitRepo.findById(timeCommitId)
-                .orElseThrow((() -> new TimeCommitNotFoundException(String
-                .format("TimeCommit with id: %s does not exist", timeCommitId))));
+                .orElseThrow((() -> new TimeCommitNotFoundException(timeCommitId)));
 
         if (timeCommit.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this TimeCommit");
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "TimeCommit");
         }
 
         timeCommitRepo.deleteById(timeCommitId);
@@ -82,11 +82,10 @@ public class TimeCommitService {
     @PreAuthorize("#ownerId == principal.id")
     public TimeCommit updateTime(Long ownerId, Long timeCommitId, Long time) throws TimeCommitNotFoundException {
         TimeCommit timeCommit = timeCommitRepo.findById(timeCommitId)
-                .orElseThrow( () -> new TimeCommitNotFoundException(String
-        .format("Time commit with id: %s does not exist", timeCommitId)));
+                .orElseThrow((() -> new TimeCommitNotFoundException(timeCommitId)));
 
         if (timeCommit.getOwnerId() != ownerId) {
-            throw new AccessDeniedException("User does not have ownership of this TimeCommit");
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "TimeCommit");
         }
 
         timeCommit.setTime(time);
