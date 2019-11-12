@@ -1,5 +1,6 @@
 package com.timetracker.timetracker.authenticationcontroller;
 
+import com.timetracker.timetracker.model.CustomPrincipalUser;
 import com.timetracker.timetracker.model.User;
 import com.timetracker.timetracker.security.JwtRequest;
 import com.timetracker.timetracker.security.JwtResponse;
@@ -37,7 +38,8 @@ public class JwtAuthenticationController {
 
         // generate the token and append to the response
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        final Long id = ((CustomPrincipalUser) userDetails).getId();
+        return ResponseEntity.ok(new JwtResponse(token, id));
     }
 
     // use AuthenticationManager as a check to confirm valid log in
