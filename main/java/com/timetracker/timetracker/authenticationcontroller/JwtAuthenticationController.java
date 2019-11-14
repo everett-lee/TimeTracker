@@ -33,12 +33,12 @@ public class JwtAuthenticationController {
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
         // find the corresponding user details from the database
-        final UserDetails userDetails = userDetailsService
+        final CustomPrincipalUser userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getEmail());
 
         // generate the token and append to the response
         final String token = jwtTokenUtil.generateToken(userDetails);
-        final Long id = ((CustomPrincipalUser) userDetails).getId();
+        final Long id = userDetails.getId();
         return ResponseEntity.ok(new JwtResponse(token, id));
     }
 
