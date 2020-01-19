@@ -21,7 +21,7 @@ public class Task {
     private String taskName;
 
     @OneToOne
-    @JoinColumn(name = "task_fk")
+    @JoinColumn(name = "client_fk")
     private Client client;
 
     private LocalDate dateAdded;

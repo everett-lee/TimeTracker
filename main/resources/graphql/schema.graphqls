@@ -8,7 +8,7 @@ type Mutation {
   createTask(
            ownerId: ID!,
            taskName: String!,
-           clientId: Long!
+           clientId: ID!
          ) : Task!
 
   deleteTask(
