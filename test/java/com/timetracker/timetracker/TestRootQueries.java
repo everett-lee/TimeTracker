@@ -37,16 +37,12 @@ public class TestRootQueries {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testAllTasksTwoEntries() throws ClientNotFoundException {
-        String[] taskNames = {"Bore holds", "Blast rocks"};
-
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, taskNames[0], 1L);
-        taskService.createTask(1L, taskNames[1], 1L);
+        String[] taskNames = {"Build rocket", "Bore some holes", "Nunchucks practice"};
 
         List<Task> tasks = taskService.getAllTasksByOwnerId(1L);
 
         // there are two tasks belonging to this user
-        assertEquals(2, tasks.size());
+        assertEquals(3, tasks.size());
 
         // the tasks are correctly named
         for (int i = 0; i < tasks.size(); i++) {
@@ -56,12 +52,9 @@ public class TestRootQueries {
 
     @Test
     @Transactional
-    @WithMockCustomUser( id = 1L )
+    @WithMockCustomUser( id = 3L )
     public void testAllTasksNoEntries() {
-
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-
-        List<Task> tasks = taskService.getAllTasksByOwnerId(1L);
+        List<Task> tasks = taskService.getAllTasksByOwnerId(3L);
 
         // there are no tasks belonging to this user
         assertEquals(0, tasks.size());
@@ -73,20 +66,6 @@ public class TestRootQueries {
     @Transactional
     @WithMockCustomUser( id = 2L )
     public void testAllTasksTwoEntriesInvalidId() throws ClientNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
-
-        Task t1 = new Task();
-        t1.setTaskName("Fix the rocket");
-        t1.setClient(clientRepo.findById(1L).get());
-        t1.setOwnerId(1L);
-        Task t2 = new Task();
-        t2.setTaskName("Summarise: what is a hat?");
-        t2.setClient(clientRepo.findById(2L).get());
-        t2.setOwnerId(1L);
-
-        taskRepo.save(t1);
-        taskRepo.save(t2);
 
         taskService.getAllTasksByOwnerId(1L);
     }

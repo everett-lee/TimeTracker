@@ -7,3 +7,5 @@ INSERT INTO task (owner_id, task_name, client_fk, completed)
 VALUES (1, 'Build rocket', 1, false);
 INSERT INTO task (owner_id, task_name, client_fk, completed)
 VALUES (1, 'Bore some holes', 1, false);
+INSERT INTO task (owner_id, task_name, client_fk, completed)
+VALUES (1, 'Nunchucks practice', 2, false);

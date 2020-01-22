@@ -109,15 +109,12 @@ public class TestSubtaskActions {
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser( id = 1L )
     public void testCreateSubtaskInvalidTaskId() throws TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-
         Task t = new Task();
         t.setTaskName("Pick moon rocks");
         t.setOwnerId(2L);
-        t.setClient(clientRepo.findById(1L).get());
         taskRepo.save(t);
 
-        subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
+        subtaskService.createSubtask(1L, 4L,"Get borer", "Admin", new ArrayList<>());
     }
 
     // expect subtask to be deleted
@@ -161,16 +158,17 @@ public class TestSubtaskActions {
     // expect subtask deletion to fail if it is a dependency
     @Test(expected = DeletedDependencyException.class)
     @WithMockCustomUser( id = 1L )
-    public void testDeleteSubtaskDependencyMaintained() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, DeletedDependencyException {
-        String taskName = "Fix the rocket";
+    public void testDeleteSubtaskDependencyMaintained() throws SubtaskNotFoundException, TaskNotFoundException, DeletedDependencyException {
         String subtaskOneName = "Check the booster";
         String subtaskTwoName = "Buy new rocket fuel";
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, taskName, 1L);
-        subtaskService.createSubtask(1L, 1L, subtaskOneName, "Mechanic"
+        Subtask subtaskOne = subtaskService.createSubtask(1L, 1L, subtaskOneName, "Mechanic"
                 , new ArrayList<>());
         subtaskService.createSubtask(1L, 1L, subtaskTwoName, "Shopping"
-                , new ArrayList<>(Arrays.asList(1L)));
+                , new ArrayList<>());
+
+        System.out.println(taskRepo.findById(1L).get().getTaskName() + ">>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println(taskRepo.findById(1L).get().getSubtasks() + ">>>>>>>>>>>>>>>>>>>>>>>");
+        taskRepo.findById(1L).get().getSubtasks().forEach( el -> System.out.println(el.getSubtaskName()));
 
         // there are two subtasks of the only task
         assertEquals(2, subtaskRepo.count());

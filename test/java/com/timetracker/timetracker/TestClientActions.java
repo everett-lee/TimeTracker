@@ -1,6 +1,5 @@
 package com.timetracker.timetracker;
 
-import com.timetracker.timetracker.model.Client;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
@@ -29,7 +28,6 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 public class TestClientActions {
-
     @Autowired
     ClientService clientService;
     @Autowired
@@ -51,7 +49,7 @@ public class TestClientActions {
         String name = "Thom Yorke";
         clientService.createClient(1L, name, "Soundtracks", "UK");
 
-        assertEquals(name, clientRepo.findById(1L).get().getClientName());
+        assertEquals(name, clientRepo.findById(3L).get().getClientName());
     }
 
 
@@ -73,25 +71,19 @@ public class TestClientActions {
         String name = "Thom Yorke";
         clientService.createClient(1L, name, "Soundtracks", "UK");
 
-        assertEquals(1, clientRepo.count());
-        clientService.deleteClient(1L, 1L);
-        assertEquals(0, clientRepo.count());
+        assertEquals(3, clientRepo.count());
+        clientService.deleteClient(1L, 3L);
+        assertEquals(2, clientRepo.count());
     }
 
     // expect deletion to fail due to wrong owner id
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser( id = 2L )
     public void testDeleteClientInvalidId() throws ClientNotFoundException {
-        Client c1 = new Client();
-        c1.setOwnerId(1L);
-        c1.setLocation("");
-        c1.setBusinessType("");
-        c1.setClientName("");
-
         clientService.deleteClient(1L, 1L);
     }
 
-    // expect deletion to fail due to task -> client relationship
+    // expect deletion to fail due to client -> task relationship
     @Test (expected =  DataIntegrityViolationException.class)
     @WithMockCustomUser( id = 1L )
     public void testDeleteClientWithRelationship() throws ClientNotFoundException {
@@ -106,25 +98,6 @@ public class TestClientActions {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testCreateGetAllByOwnerId() {
-        Client c1 = new Client();
-        c1.setOwnerId(1L);
-        c1.setLocation("");
-        c1.setBusinessType("");
-        c1.setClientName("");
-        Client c2 = new Client();
-        c2.setOwnerId(1L);
-        c2.setLocation("");
-        c2.setBusinessType("");
-        c2.setClientName("");
-        Client c3 = new Client();
-        c3.setOwnerId(2L);
-        c3.setLocation("");
-        c3.setBusinessType("");
-        c3.setClientName("");
-
-        clientRepo.save(c1);
-        clientRepo.save(c2);
-
         int n = clientService.getAllClientsByOwnerId(1L).size();
 
         // there are the correct number of clients saved
@@ -136,24 +109,6 @@ public class TestClientActions {
     @Transactional
     @WithMockCustomUser( id = 2L )
     public void testCreateGetAllByOwnerIdInvalidId() {
-        Client c1 = new Client();
-        c1.setOwnerId(1L);
-        c1.setLocation("");
-        c1.setBusinessType("");
-        c1.setClientName("");
-        Client c2 = new Client();
-        c2.setOwnerId(1L);
-        c2.setLocation("");
-        c2.setBusinessType("");
-        c2.setClientName("");
-        Client c3 = new Client();
-        c3.setOwnerId(2L);
-        c3.setLocation("");
-        c3.setBusinessType("");
-        c3.setClientName("");
-
-        clientRepo.save(c1);
-        clientRepo.save(c2);
 
         int n = clientService.getAllClientsByOwnerId(1L).size();
     }

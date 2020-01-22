@@ -1,5 +1,7 @@
 package com.timetracker.timetracker.model;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,12 +36,13 @@ public class Subtask {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JoinColumn(name = "subtask_fk")
+    @JoinColumn(name = "timecommit_fk")
     private List<TimeCommit> timeCommits;
 
     // the subtasks this subtask depends on
     @OneToMany(
-            fetch = FetchType.EAGER
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.PERSIST
     )
     @JoinColumn(name = "subtask_fk")
     private List<Subtask> dependsOn;

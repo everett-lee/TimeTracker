@@ -34,7 +34,7 @@ public class Task {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JoinColumn( name = "tas_fk")
+    @JoinColumn( name = "subtask_fk")
     private List<Subtask> subtasks;
 
     private boolean completed;

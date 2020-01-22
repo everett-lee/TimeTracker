@@ -65,7 +65,6 @@ public class SubtaskService {
         // include the new addition
         List<Subtask> subtasks = task.getSubtasks();
         subtasks.add(subtask);
-        task.setSubtasks(subtasks);
 
         subtaskRepo.save(subtask);
         return subtask;
