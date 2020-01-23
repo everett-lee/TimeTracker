@@ -50,11 +50,10 @@ public class TestTaskActions {
     @Test
     @WithMockCustomUser(id = 1L)
     public void testCreateTask() throws ClientNotFoundException {
-        String taskName = "Fix the rocket";
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        String taskName = "Get bulletproof glass";
         taskService.createTask(1L, taskName, 1L);
 
-        assertEquals(taskService.getAllTasksByOwnerId(1L).get(0).getTaskName(), taskName);
+        assertEquals(taskService.getAllTasksByOwnerId(1L).get(3).getTaskName(), taskName);
     }
 
     // expect access to be denied where user id does not match the task
@@ -62,86 +61,66 @@ public class TestTaskActions {
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 4L)
     public void testCreateTaskInvalidId() throws ClientNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Fix the rocket", 1L);
+        String taskName = "Get bulletproof glass";
+        taskService.createTask(1L, taskName, 1L);
     }
 
     // expect task to be deleted
     @Test
     @WithMockCustomUser(id = 1L)
-    public void testDeleteSubtask() throws ClientNotFoundException, TaskNotFoundException {
-        String taskName = "Fix the rocket";
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, taskName, 1L);
-
-        assertEquals(1, taskRepo.count());
+    public void testDeleteTask() throws ClientNotFoundException, TaskNotFoundException {
+        assertEquals(3, taskRepo.count());
 
         taskService.deleteTask(1L, 1L);
 
-        assertEquals(0, taskRepo.count());
+        assertEquals(2, taskRepo.count());
     }
 
     // expect task deletion to fail due to invalid task id
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 2L)
-    public void testDeleteSubtaskInvalidId() throws ClientNotFoundException, TaskNotFoundException {
-        clientRepo.save(new Client());
-        Task t = new Task();
-        t.setOwnerId(1L);
-        taskRepo.save(t);
+    public void testDeleteTaskInvalidId() throws ClientNotFoundException, TaskNotFoundException {
 
-        assertEquals(1, taskRepo.count());
+        assertEquals(3, taskRepo.count());
         taskService.deleteTask(2L, 1L);
     }
 
     // expect task deletion to fail due to invalid owner id
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 2L)
-    public void testDeleteSubtaskInvalidTaskId() throws ClientNotFoundException, TaskNotFoundException {
-        clientRepo.save(new Client());
-        Task t = new Task();
-        t.setOwnerId(1L);
-        taskRepo.save(t);
+    public void testDeleteTaskInvalidTaskId() throws ClientNotFoundException, TaskNotFoundException {
 
-        assertEquals(1, taskRepo.count());
+        assertEquals(3, taskRepo.count());
         taskService.deleteTask(1L, 1L);
     }
-
-
 
     // expect successful addition of task where user's id matches task
     // owner id
     @Test
-    @WithMockCustomUser(id = 1L)
+    @WithMockCustomUser(id = 2L)
     public void testOnlyOwnedTasksRetrieved() {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
+        clientService.createClient(2L, "Hat co", "Hat making", "Broadstairs");
 
         Task t1 = new Task();
-        t1.setTaskName("Fix the rocket");
-        t1.setClient(clientRepo.findById(1L).get());
-        t1.setOwnerId(1L);
+        t1.setTaskName("Summarise: what is a hat?");
+        t1.setClient(clientRepo.findById(3L).get());
+        t1.setOwnerId(2L);
         Task t2 = new Task();
-        t2.setTaskName("Summarise: what is a hat?");
-        t2.setClient(clientRepo.findById(2L).get());
-        t2.setOwnerId(1L);
-        Task t3 = new Task();
-        t3.setTaskName("Legal defence work (defamation)");
-        t3.setClient(clientRepo.findById(1L).get());
-        t3.setOwnerId(2L);
+        t2.setTaskName("Legal defence work (defamation)");
+        t2.setClient(clientRepo.findById(3L).get());
+        t2.setOwnerId(2L);
 
         taskRepo.save(t1);
         taskRepo.save(t2);
-        taskRepo.save(t3);
 
-        List<com.timetracker.timetracker.model.Task> result = taskService.getAllTasksByOwnerId(1L);
+        List<com.timetracker.timetracker.model.Task> result = taskService.getAllTasksByOwnerId(2L);
 
         // there are three tasks in the repo
-        assertEquals(taskRepo.count(), 3);
+        assertEquals(taskRepo.count(), 5);
         // assert tasks owned by this user is of the correct amount
         assertEquals(2, result.size());
         // remove any with wrong id and check count is the same
-        assertEquals(2, result.stream().filter(t -> t.getOwnerId() == 1L).count());
+        assertEquals(2, result.stream().filter(t -> t.getOwnerId() == 2L).count());
     }
 
 
@@ -149,9 +128,6 @@ public class TestTaskActions {
     @Test
     @WithMockCustomUser(id = 1L)
     public void testSetCompleted() throws ClientNotFoundException, TaskNotFoundException {
-        String taskName = "Fix the rocket";
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, taskName, 1L);
         taskService.setTaskComplete(1L, 1L, true);
 
         assertEquals(true, taskRepo.findAllByOwnerId(1L).get(0).isCompleted());
@@ -162,48 +138,8 @@ public class TestTaskActions {
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 1L)
     public void testSetCompletedInvalidOwnerId() throws TaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
-
-        Task t1 = new Task();
-        t1.setTaskName("Fix the rocket");
-        t1.setClient(clientRepo.findById(1L).get());
-        t1.setOwnerId(1L);
-        Task t2 = new Task();
-        t2.setTaskName("Summarise: what is a hat?");
-        t2.setClient(clientRepo.findById(2L).get());
-        t2.setOwnerId(2L);
-
         taskService.setTaskComplete(2L, 2L, true);
-
-        assertEquals(true, taskRepo.findAllByOwnerId(1L).get(0).isCompleted());
     }
-
-    // expect to raise exception as user with id 1 does not
-    // own task with id 2
-    @Test(expected = AccessDeniedException.class)
-    @WithMockCustomUser(id = 1L)
-    public void testSetCompletedInvalidTaskId() throws TaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        clientService.createClient(1L, "Hat co", "Hat making", "Broadstairs");
-
-        Task t1 = new Task();
-        t1.setTaskName("Fix the rocket");
-        t1.setClient(clientRepo.findById(1L).get());
-        t1.setOwnerId(1L);
-        Task t2 = new Task();
-        t2.setTaskName("Summarise: what is a hat?");
-        t2.setClient(clientRepo.findById(2L).get());
-        t2.setOwnerId(2L);
-
-        taskRepo.save(t1);
-        taskRepo.save(t2);
-
-        taskService.setTaskComplete(1L, 2L, true);
-
-        assertEquals(true, t2.isCompleted());
-    }
-
 }
 
 
