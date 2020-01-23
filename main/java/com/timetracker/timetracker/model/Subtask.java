@@ -38,22 +38,14 @@ public class Subtask {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JoinTable( name = "subtask_timecommit",
-            joinColumns = @JoinColumn(
-                    name = "subtask_fk"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "timecommit_id"
-            ))
+    @JoinColumn(name = "timecommit_fk")
     private List<TimeCommit> timeCommits;
 
     // the subtasks this subtask depends on
-    @OneToMany(
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+    @ManyToMany(
+            fetch = FetchType.EAGER
     )
-    @JoinTable( name = "subtask_dependentsubtask",
+    @JoinTable(name = "subtask_dependentsubtask",
             joinColumns = @JoinColumn(
                     name = "main_subtasktask_fk"
             ),

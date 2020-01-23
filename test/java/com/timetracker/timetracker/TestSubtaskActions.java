@@ -67,17 +67,14 @@ public class TestSubtaskActions {
     @Transactional
     @WithMockCustomUser( id = 1L )
     public void testCreateSubtask() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
-        String taskName = "Fix the rocket";
-        String subtaskOneName = "Check the booster";
-        String subtaskTwoName = "Buy new rocket fuel";
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, taskName, 1L);
-        subtaskService.createSubtask(1L, 1L, subtaskOneName, "Mechanic"
+        String subtaskOneName = "Gardening";
+        String subtaskTwoName = "Do some jiu jits";
+        subtaskService.createSubtask(1L, 3L, subtaskOneName, "Botany"
                                      , new ArrayList<>());
-        subtaskService.createSubtask(1L, 1L, subtaskTwoName, "Shopping"
+        subtaskService.createSubtask(1L, 3L, subtaskTwoName, "Sports"
                 , new ArrayList<>(Arrays.asList(1L)));
 
-        Task t = taskService.getAllTasksByOwnerId(1L).get(0);
+        Task t = taskService.getAllTasksByOwnerId(1L).get(2);
 
         // there are two subtasks
         assertEquals(2, t.getSubtasks().size());
@@ -122,18 +119,13 @@ public class TestSubtaskActions {
     @Test
     @WithMockCustomUser( id = 1L )
     public void testDeleteSubtask() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, DeletedDependencyException {
-        String subtaskOneName = "Check the booster";
-        subtaskService.createSubtask(1L, 1L, subtaskOneName, "Mechanic"
-                , new ArrayList<>());
-
         // there is one subtask of the  task
+        assertEquals(2, taskRepo.findById(1L).get().getSubtasks().size());
+
+        subtaskService.deleteSubtask(1L, 2L);
+
+        // there is one subtask
         assertEquals(1, taskRepo.findById(1L).get().getSubtasks().size());
-
-        subtaskService.deleteSubtask(1L, 1L);
-
-        // there is no subtask
-        assertEquals(0, subtaskRepo.count());
-        assertEquals(0, taskRepo.findById(1L).get().getSubtasks().size());
     }
 
     // expect deletion to fail due to wrong id
@@ -144,9 +136,6 @@ public class TestSubtaskActions {
         subtask.setOwnerId(3L);
         subtaskRepo.save(subtask);
 
-        // there is one subtask of the only task
-        assertEquals(1, subtaskRepo.count());
-
         subtaskService.deleteSubtask(3L, 1L);
     }
 
@@ -156,7 +145,7 @@ public class TestSubtaskActions {
     @WithMockCustomUser( id = 1L )
     @Transactional
     public void testDeleteSubtaskDependencyMaintained() throws SubtaskNotFoundException, TaskNotFoundException, DeletedDependencyException {
-        // there are two subtasks of the only task
+        // there are two subtasks
         assertEquals(2, subtaskRepo.count());
         assertEquals(2, taskRepo.findById(1L).get().getSubtasks().size());
 
@@ -164,35 +153,21 @@ public class TestSubtaskActions {
     }
 
 
-    // test to check owner Task's subtasks are updated to reflect new
-    // additions
+    // test to check owner Task's subtasks are updated to reflect new additions
     @Test
     @WithMockCustomUser( id = 1L )
     public void testSubtasksSetValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
-        subtaskService.createSubtask(1L, 1L, "Dig stuff", "Labouring", new ArrayList<>());
-
-        Subtask st1 = subtaskRepo.findById(1L).get();
-        Subtask st2 = subtaskRepo.findById(2L).get();
+        subtaskService.createSubtask(1L, 1L,"Buy snakes", "Admin", new ArrayList<>());
 
         Task t1 = taskRepo.findAllByOwnerId(1L).get(0);
-        System.out.println("END UP WITH: " + t1.getSubtasks());
 
-        assertEquals(2, t1.getSubtasks().size());
+        assertEquals(3, t1.getSubtasks().size());
     }
 
     // check that subtask set as complete
     @Test
     @WithMockCustomUser( id = 1L )
     public void testSubtaskSetCompleteWithValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
-
         subtaskService.setSubtaskComplete(1L, 1L, true);
 
         boolean subTaskCompleted  = subtaskRepo.findById(1L).get().isCompleted();
@@ -206,11 +181,6 @@ public class TestSubtaskActions {
     @Test
     @WithMockCustomUser( id = 1L )
     public void testSubtaskNotCompletedWithValidId() throws ClientNotFoundException, TaskNotFoundException, SubtaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
-
         subtaskService.setSubtaskComplete(1L, 1L, true);
         subtaskService.setSubtaskComplete(1L, 1L, false);
 
@@ -225,10 +195,6 @@ public class TestSubtaskActions {
     @Test
     @WithMockCustomUser( id = 1L )
     public void testSubtaskTimeCommitsReturned() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L,"Get borer", "Admin", new ArrayList<>());
         timeCommitService.createTimeCommit(1L, 1L);
 
         List<TimeCommit> timeCommits = subtaskService.timeCommits(subtaskRepo.findById(1L).get());
@@ -242,7 +208,6 @@ public class TestSubtaskActions {
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser( id = 2L )
     public void testSubtaskTimeCommitsException() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
-
         subtaskRepo = mock(SubtaskRepository.class);
         when(subtaskRepo.findById(1L)).thenReturn(java.util.Optional.of(new Subtask()));
         List<TimeCommit> timeCommits = subtaskService.timeCommits(subtaskRepo.findById(1L).get());
