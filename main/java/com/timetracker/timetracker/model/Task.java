@@ -33,8 +33,14 @@ public class Task {
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
-    )
-    @JoinColumn( name = "subtask_fk")
+             )
+    @JoinTable( name = "task_subtask",
+            joinColumns = @JoinColumn(
+                    name = "task_fk"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "subtask_fk"
+            ))
     private List<Subtask> subtasks;
 
     private boolean completed;

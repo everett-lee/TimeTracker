@@ -20,6 +20,8 @@ public class Subtask {
 
     private Long ownerId;
 
+    private Long taskId;
+
     private String subtaskName;
 
     private String category;
@@ -36,15 +38,28 @@ public class Subtask {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JoinColumn(name = "timecommit_fk")
+    @JoinTable( name = "subtask_timecommit",
+            joinColumns = @JoinColumn(
+                    name = "subtask_fk"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "timecommit_id"
+            ))
     private List<TimeCommit> timeCommits;
 
     // the subtasks this subtask depends on
     @OneToMany(
             fetch = FetchType.EAGER,
-            cascade = CascadeType.PERSIST
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
-    @JoinColumn(name = "subtask_fk")
+    @JoinTable( name = "subtask_dependentsubtask",
+            joinColumns = @JoinColumn(
+                    name = "main_subtasktask_fk"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "dependent_subtask_fk"
+            ))
     private List<Subtask> dependsOn;
 
     public String getSubtaskName() {

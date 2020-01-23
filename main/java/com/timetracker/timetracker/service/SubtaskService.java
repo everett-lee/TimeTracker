@@ -63,8 +63,7 @@ public class SubtaskService {
 
         // update the owning task's subtasks to
         // include the new addition
-        List<Subtask> subtasks = task.getSubtasks();
-        subtasks.add(subtask);
+        task.getSubtasks().add(subtask);
 
         subtaskRepo.save(subtask);
         return subtask;
@@ -81,12 +80,15 @@ public class SubtaskService {
         }
 
         // check if any subtask depends on the one that is to be deleted
-        boolean isDependency = subtaskRepo.findByOwnerId(ownerId)
-                .stream().map( st -> st.getDependsOn())
+        long dependencies = subtaskRepo.findByOwnerId(ownerId)
+                // don't include this subtask
+                .stream().filter( el -> el.getId() != subtaskId)
+                // map each subtask to its dependencies
+                .map( st -> st.getDependsOn())
                 .flatMap( arr -> arr.stream())
-                .anyMatch( el -> el.getId() == subtaskId);
+                .count();
 
-        if (isDependency) {
+        if (dependencies > 0) {
             throw new DeletedDependencyException(subtaskId);
         }
 
