@@ -17,6 +17,9 @@ public class TimeCommit {
 
     private Long ownerId;
 
+    @ManyToOne
+    private Subtask subtask;
+
     // date of the time commit
     private LocalDate date;
 
@@ -50,5 +53,13 @@ public class TimeCommit {
 
     public void setTime(Long time) {
         this.time = time;
+    }
+
+    public Subtask getSubtask() {
+        return subtask;
+    }
+
+    public void setSubtask(Subtask subtask) {
+        this.subtask = subtask;
     }
 }

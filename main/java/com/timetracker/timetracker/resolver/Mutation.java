@@ -77,15 +77,15 @@ public class Mutation implements GraphQLMutationResolver {
 
     // methods for creating and updating timecommit entities
 
-    public TimeCommit createTimeCommit(Long ownerId, Long subtaskId) throws SubtaskNotFoundException {
-        return timeCommitService.createTimeCommit(ownerId, subtaskId);
+    public TimeCommit createTimeCommit(Long ownerId, Long subtaskId, Long time) throws SubtaskNotFoundException {
+        return timeCommitService.createTimeCommit(ownerId, subtaskId, time);
     }
 
-    public boolean deleteTimeCommit(Long ownerId, Long timeCommitId) throws TimeCommitNotFoundException {
-        return timeCommitService.deleteTimeCommit(ownerId, timeCommitId);
+    public boolean deleteTimeCommit(Long ownerId, Long subtaskId, Long timeCommitId) throws TimeCommitNotFoundException, SubtaskNotFoundException {
+        return timeCommitService.deleteTimeCommit(ownerId, subtaskId, timeCommitId);
     }
 
-    public TimeCommit updateTime(Long ownerId, Long timeCommitId, Long time) throws TimeCommitNotFoundException {
-        return timeCommitService.updateTime(ownerId, timeCommitId, time);
+    public TimeCommit updateTimeCommit(Long ownerId, Long timeCommitId, Long time) throws TimeCommitNotFoundException {
+        return timeCommitService.updateTimeCommit(ownerId, timeCommitId, time);
     }
 }

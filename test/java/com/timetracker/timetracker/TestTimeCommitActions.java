@@ -59,7 +59,7 @@ public class TestTimeCommitActions {
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createTimeCommit(1L, 1L);
+        timeCommitService.createTimeCommit(1L, 1L, 0L);
 
         assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
     }
@@ -72,8 +72,8 @@ public class TestTimeCommitActions {
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createTimeCommit(1L, 1L);
-        timeCommitService.createTimeCommit(1L, 1L);
+        timeCommitService.createTimeCommit(1L, 1L, 0L);
+        timeCommitService.createTimeCommit(1L, 1L, 0L);
 
         assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
     }
@@ -87,7 +87,7 @@ public class TestTimeCommitActions {
         when(submock.getOwnerId()).thenReturn(1L);
         when(subtaskRepo.findById(1L)).thenReturn(java.util.Optional.ofNullable(submock));
 
-        timeCommitService.createTimeCommit(1L, 1L);
+        timeCommitService.createTimeCommit(1L, 1L, 0L);
 
     }
 
@@ -99,13 +99,13 @@ public class TestTimeCommitActions {
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createTimeCommit(1L, 1L);
+        timeCommitService.createTimeCommit(1L, 1L, 0L);
 
         // the time commit was added
         assertEquals(1, timeCommitRepo.count());
         assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
 
-        timeCommitService.deleteTimeCommit(1L, 1L);
+        timeCommitService.deleteTimeCommit(1L, 1L, 1L);
 
         // it was deleted
         assertEquals(0, timeCommitRepo.count());
@@ -126,7 +126,7 @@ public class TestTimeCommitActions {
         // the time commit was added
         assertEquals(1, timeCommitRepo.count());
 
-        timeCommitService.deleteTimeCommit(1L, 1L);
+        timeCommitService.deleteTimeCommit(1L, 1L, 1L);
     }
 
     // expect successful update of time
@@ -137,12 +137,12 @@ public class TestTimeCommitActions {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Bore holes", 1L);
         subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createTimeCommit(1L, 1L);
+        timeCommitService.createTimeCommit(1L, 1L, 0L);
 
         TimeCommit timeCommit = timeCommitRepo.findById(1L).get();
 
         assertEquals(Long.valueOf(0), timeCommit.getTime());
-        timeCommitService.updateTime(1L, 1L, 5L);
+        timeCommitService.updateTimeCommit(1L, 1L, 5L);
         assertEquals(Long.valueOf(5), timeCommit.getTime());
     }
 }

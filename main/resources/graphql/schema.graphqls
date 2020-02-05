@@ -44,14 +44,16 @@ type Mutation {
   createTimeCommit(
            ownerId: ID!,
            subtaskId: ID!,
+           time: Long!
          ) : TimeCommit!
 
   deleteTimeCommit(
            ownerId: ID!,
+           subtaskId: ID!,
            timeCommitId: ID!,
          ) : Boolean!
 
-  updateTime(
+  updateTimeCommit(
             ownerId: ID!,
             timeCommitId: ID!,
             time: Long!
@@ -96,6 +98,7 @@ type Subtask {
 type TimeCommit {
   id: ID!
   ownerId: ID!
+  subtask: Subtask!
   date: String!
   time: Long!
 }

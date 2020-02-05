@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TimeCommitService {
@@ -32,7 +33,7 @@ public class TimeCommitService {
 
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
-    public TimeCommit createTimeCommit(Long ownerId, Long subtaskId) throws SubtaskNotFoundException {
+    public TimeCommit createTimeCommit(Long ownerId, Long subtaskId, Long time) throws SubtaskNotFoundException {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
@@ -53,8 +54,9 @@ public class TimeCommitService {
 
         TimeCommit timeCommit = new TimeCommit();
         timeCommit.setDate(LocalDate.now());
-        timeCommit.setTime(0L);
+        timeCommit.setTime(time);
         timeCommit.setOwnerId(ownerId);
+        timeCommit.setSubtask(subtask);
         timeCommitRepo.save(timeCommit);
 
         List<TimeCommit> commits = subtask.getTimeCommits();
@@ -66,7 +68,7 @@ public class TimeCommitService {
 
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
-    public boolean deleteTimeCommit(Long ownerId, Long timeCommitId) throws TimeCommitNotFoundException {
+    public boolean deleteTimeCommit(Long ownerId, Long subtaskId, Long timeCommitId) throws TimeCommitNotFoundException, SubtaskNotFoundException {
         TimeCommit timeCommit = timeCommitRepo.findById(timeCommitId)
                 .orElseThrow((() -> new TimeCommitNotFoundException(timeCommitId)));
 
@@ -74,13 +76,17 @@ public class TimeCommitService {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "TimeCommit");
         }
 
-        timeCommitRepo.deleteById(timeCommitId);
+        Subtask subtask = subtaskRepo.findById(subtaskId)
+                .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
+
+        subtask.getTimeCommits().removeIf( tc -> tc.getId() == timeCommitId);
+
         return true;
     }
 
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
-    public TimeCommit updateTime(Long ownerId, Long timeCommitId, Long time) throws TimeCommitNotFoundException {
+    public TimeCommit updateTimeCommit(Long ownerId, Long timeCommitId, Long time) throws TimeCommitNotFoundException {
         TimeCommit timeCommit = timeCommitRepo.findById(timeCommitId)
                 .orElseThrow((() -> new TimeCommitNotFoundException(timeCommitId)));
 

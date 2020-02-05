@@ -195,7 +195,7 @@ public class TestSubtaskActions {
     @Test
     @WithMockCustomUser( id = 1L )
     public void testSubtaskTimeCommitsReturned() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
-        timeCommitService.createTimeCommit(1L, 1L);
+        timeCommitService.createTimeCommit(1L, 1L, 0L);
 
         List<TimeCommit> timeCommits = subtaskService.timeCommits(subtaskRepo.findById(1L).get());
 

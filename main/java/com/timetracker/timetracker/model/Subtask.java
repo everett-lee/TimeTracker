@@ -34,11 +34,11 @@ public class Subtask {
 
     // the time committed to this subtask
     @OneToMany(
+            mappedBy = "subtask",
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JoinColumn(name = "timecommit_fk")
     private List<TimeCommit> timeCommits;
 
     // the subtasks this subtask depends on
