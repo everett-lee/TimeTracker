@@ -41,7 +41,7 @@ type Mutation {
             complete: Boolean!
          ) : Subtask!
 
-  createTimeCommit(
+  createOrUpdateTimeCommit(
            ownerId: ID!,
            subtaskId: ID!,
            time: Long!

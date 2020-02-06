@@ -59,9 +59,28 @@ public class TestTimeCommitActions {
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createTimeCommit(1L, 1L, 0L);
+        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
 
         assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
+    }
+
+    @Test
+    @WithMockCustomUser(id = 1L)
+    public void testCreateThenUpdateTimeCommit() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
+        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
+        taskService.createTask(1L, "Bore holes", 1L);
+
+        subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
+        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 42L);
+
+        assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
+
+        TimeCommit timeCommit = subtaskRepo.findById(1L).get().getTimeCommits().get(0);
+        assertEquals(42L, timeCommit.getTime().longValue());
+
+        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 38L);
+        timeCommit = subtaskRepo.findById(1L).get().getTimeCommits().get(0);
+        assertEquals(80L, timeCommit.getTime().longValue());
     }
 
     // expect single time commit for duplicate date
@@ -72,8 +91,8 @@ public class TestTimeCommitActions {
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createTimeCommit(1L, 1L, 0L);
-        timeCommitService.createTimeCommit(1L, 1L, 0L);
+        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
+        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
 
         assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
     }
@@ -87,7 +106,7 @@ public class TestTimeCommitActions {
         when(submock.getOwnerId()).thenReturn(1L);
         when(subtaskRepo.findById(1L)).thenReturn(java.util.Optional.ofNullable(submock));
 
-        timeCommitService.createTimeCommit(1L, 1L, 0L);
+        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
 
     }
 
@@ -99,7 +118,7 @@ public class TestTimeCommitActions {
         taskService.createTask(1L, "Bore holes", 1L);
 
         subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createTimeCommit(1L, 1L, 0L);
+        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
 
         // the time commit was added
         assertEquals(1, timeCommitRepo.count());
@@ -137,7 +156,7 @@ public class TestTimeCommitActions {
         clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
         taskService.createTask(1L, "Bore holes", 1L);
         subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createTimeCommit(1L, 1L, 0L);
+        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
 
         TimeCommit timeCommit = timeCommitRepo.findById(1L).get();
 

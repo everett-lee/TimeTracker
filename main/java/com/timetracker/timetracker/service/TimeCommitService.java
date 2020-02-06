@@ -33,7 +33,7 @@ public class TimeCommitService {
 
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
-    public TimeCommit createTimeCommit(Long ownerId, Long subtaskId, Long time) throws SubtaskNotFoundException {
+    public TimeCommit createOrUpdateTimeCommit(Long ownerId, Long subtaskId, Long time) throws SubtaskNotFoundException {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
@@ -47,12 +47,16 @@ public class TimeCommitService {
                 .stream().filter(tc -> tc.getDate().equals(LocalDate.now()))
                 .findAny();
 
-        // return the existing time commit if not null
+        TimeCommit timeCommit;
+
+        // Update and return the existing time commit if not null
         if (existing.isPresent()) {
-            return existing.get();
+            timeCommit = existing.get();
+            timeCommit.setTime(timeCommit.getTime() + time);
+            return timeCommit;
         }
 
-        TimeCommit timeCommit = new TimeCommit();
+        timeCommit = new TimeCommit();
         timeCommit.setDate(LocalDate.now());
         timeCommit.setTime(time);
         timeCommit.setOwnerId(ownerId);
@@ -79,7 +83,7 @@ public class TimeCommitService {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
-        subtask.getTimeCommits().removeIf( tc -> tc.getId() == timeCommitId);
+        subtask.getTimeCommits().removeIf(tc -> tc.getId() == timeCommitId);
 
         return true;
     }
