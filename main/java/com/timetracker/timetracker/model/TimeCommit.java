@@ -1,5 +1,7 @@
 package com.timetracker.timetracker.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -8,6 +10,7 @@ import java.time.LocalDate;
  * specific date
  */
 @Entity
+@Data
 @Table(name = "time_commit")
 public class TimeCommit {
     @Id
@@ -26,40 +29,4 @@ public class TimeCommit {
     // the time spent on the subtask
     // on this date in milliseconds
     private Long time;
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public Long getTime() {
-        return time;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
-    public Subtask getSubtask() {
-        return subtask;
-    }
-
-    public void setSubtask(Subtask subtask) {
-        this.subtask = subtask;
-    }
 }

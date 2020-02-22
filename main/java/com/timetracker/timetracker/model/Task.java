@@ -1,5 +1,8 @@
 package com.timetracker.timetracker.model;
 
+import lombok.Data;
+
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.List;
  *  and has a single client and one or more subtasks.
  */
 @Entity
+@Data
 @Table(name = "task")
 public class Task {
     @Id
@@ -39,63 +43,11 @@ public class Task {
 
     private boolean completed;
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
-    public List<Subtask> getSubtasks() {
-        return subtasks;
-    }
-
-    public void setSubtasks(List<Subtask> subtasks) {
-        this.subtasks = subtasks;
-    }
-
-    public LocalDate getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(LocalDate dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public LocalDate getDateCompleted() {
-        return dateCompleted;
-    }
-
-    public void setDateCompleted(LocalDate dateCompleted) {
-        this.dateCompleted = dateCompleted;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
+    // Get sum of all timecommits of all subtasks
+    public long getTotalTime() {
+        return getSubtasks().stream()
+        .map( subtask -> subtask.getTimeCommits())
+        .flatMapToLong(timeCommits -> timeCommits.stream()
+                .mapToLong(timeCommit -> timeCommit.getTime())).sum();
     }
 }

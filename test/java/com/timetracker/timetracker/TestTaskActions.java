@@ -1,7 +1,5 @@
 package com.timetracker.timetracker;
 
-
-import com.timetracker.timetracker.model.Client;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
@@ -139,6 +137,17 @@ public class TestTaskActions {
     @WithMockCustomUser(id = 1L)
     public void testSetCompletedInvalidOwnerId() throws TaskNotFoundException {
         taskService.setTaskComplete(2L, 2L, true);
+    }
+
+
+    // expect to get correct total time for the task
+    @Test(expected = AccessDeniedException.class)
+    @WithMockCustomUser(id = 1L)
+    public void testGetTime() throws TaskNotFoundException {
+        final long expectedTime = 4;
+
+        List<Task> tasks = taskService.getAllTasksByOwnerId(1L);
+
     }
 }
 

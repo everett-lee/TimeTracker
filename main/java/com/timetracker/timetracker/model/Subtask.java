@@ -1,5 +1,6 @@
 package com.timetracker.timetracker.model;
 
+import lombok.Data;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
  * a Task. Each has an associated category.
  */
 @Entity
+@Data
 @Table(name = "subtask")
 public class Subtask {
     @Id
@@ -54,71 +56,4 @@ public class Subtask {
             ))
     private List<Subtask> dependsOn;
 
-    public String getSubtaskName() {
-        return subtaskName;
-    }
-
-    public void setSubtaskName(String subtaskName) {
-        this.subtaskName = subtaskName;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
-    public List<Subtask> getDependsOn() {
-        return dependsOn;
-    }
-
-    public void setDependsOn(List<Subtask> dependsOn) {
-        this.dependsOn = dependsOn;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public LocalDate getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(LocalDate dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public LocalDate getDateCompleted() {
-        return dateCompleted;
-    }
-
-    public void setDateCompleted(LocalDate dateCompleted) {
-        this.dateCompleted = dateCompleted;
-    }
-
-    public List<TimeCommit> getTimeCommits() {
-        return timeCommits;
-    }
-
-    public void setTimeCommits(List<TimeCommit> timeCommits) {
-        this.timeCommits = timeCommits;
-    }
 }

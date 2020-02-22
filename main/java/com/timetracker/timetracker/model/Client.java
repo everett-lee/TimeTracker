@@ -1,11 +1,14 @@
 package com.timetracker.timetracker.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 /**
  * The client associated with a Task
  */
 @Entity
+@Data
 @Table(name = "client")
 public class Client {
     @Id
@@ -21,43 +24,4 @@ public class Client {
 
     private String location;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getBusinessType() {
-        return businessType;
-    }
-
-    public void setBusinessType(String businessType) {
-        this.businessType = businessType;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
 }
