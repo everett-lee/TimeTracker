@@ -32,13 +32,13 @@ public class Task {
 
     private LocalDate dateCompleted;
 
-    // the Subtasks that compose this Task
+    // the time committed to this subtask
     @OneToMany(
+            mappedBy = "task",
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JoinColumn( name = "task_fk" )
     private List<Subtask> subtasks;
 
     private boolean completed;

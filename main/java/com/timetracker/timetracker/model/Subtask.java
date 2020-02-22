@@ -22,7 +22,9 @@ public class Subtask {
 
     private Long ownerId;
 
-    private Long taskId;
+    @ManyToOne
+    @JoinColumn(name="task_fk")
+    private Task task;
 
     private String subtaskName;
 

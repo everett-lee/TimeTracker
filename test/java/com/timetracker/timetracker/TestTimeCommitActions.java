@@ -55,31 +55,25 @@ public class TestTimeCommitActions {
     @Test
     @WithMockCustomUser(id = 1L)
     public void testCreateTimeCommit() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
+        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 50L);
 
-        subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
-
-        assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
+        assertEquals(3, subtaskRepo.findById(1L).get().getTimeCommits().size());
     }
 
     @Test
     @WithMockCustomUser(id = 1L)
     public void testCreateThenUpdateTimeCommit() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
         timeCommitService.createOrUpdateTimeCommit(1L, 1L, 42L);
 
-        assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
+        assertEquals(3, subtaskRepo.findById(1L).get().getTimeCommits().size());
 
-        TimeCommit timeCommit = subtaskRepo.findById(1L).get().getTimeCommits().get(0);
+        TimeCommit timeCommit = subtaskRepo.findById(1L).get().getTimeCommits().get(2);
         assertEquals(42L, timeCommit.getTime().longValue());
 
+
+        // Time commit exists for same date so additional time will be added
         timeCommitService.createOrUpdateTimeCommit(1L, 1L, 38L);
-        timeCommit = subtaskRepo.findById(1L).get().getTimeCommits().get(0);
+        timeCommit = subtaskRepo.findById(1L).get().getTimeCommits().get(2);
         assertEquals(80L, timeCommit.getTime().longValue());
     }
 
@@ -87,14 +81,10 @@ public class TestTimeCommitActions {
     @Test
     @WithMockCustomUser(id = 1L)
     public void testCreateTimeCommitDuplicate() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
         timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
         timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
 
-        assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
+        assertEquals(3, subtaskRepo.findById(1L).get().getTimeCommits().size());
     }
 
     // expect successful creation fails with invalid owner id
@@ -107,44 +97,24 @@ public class TestTimeCommitActions {
         when(subtaskRepo.findById(1L)).thenReturn(java.util.Optional.ofNullable(submock));
 
         timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
-
     }
 
     // expect successful deletion
     @Test
     @WithMockCustomUser(id = 1L)
     public void testTimeCommitDeleted() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, TimeCommitNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-
-        subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
-
-        // the time commit was added
-        assertEquals(1, timeCommitRepo.count());
-        assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
+        // two time commits exist for this subtask
+        assertEquals(2, subtaskRepo.findById(1L).get().getTimeCommits().size());
 
         timeCommitService.deleteTimeCommit(1L, 1L, 1L);
 
-        // it was deleted
-        assertEquals(0, timeCommitRepo.count());
-        assertEquals(0, subtaskRepo.findById(1L).get().getTimeCommits().size());
+        assertEquals(1, subtaskRepo.findById(1L).get().getTimeCommits().size());
     }
 
     // expect deletion fails where invalid id provided
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser(id = 2L)
-    public void testTimeCommitDeletedFailsInvalidId() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, TimeCommitNotFoundException {
-        subtaskRepo.save(new Subtask());
-
-        TimeCommit tc = new TimeCommit();
-        tc.setOwnerId(1L);
-
-        timeCommitRepo.save(tc);
-
-        // the time commit was added
-        assertEquals(1, timeCommitRepo.count());
-
+    public void testTimeCommitDeletedFailsInvalidId() throws SubtaskNotFoundException, TimeCommitNotFoundException {
         timeCommitService.deleteTimeCommit(1L, 1L, 1L);
     }
 
@@ -153,14 +123,9 @@ public class TestTimeCommitActions {
     @Transactional
     @WithMockCustomUser(id = 1L)
     public void testUpdateTime() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, TimeCommitNotFoundException {
-        clientService.createClient(1L, "Tesla", "Space stuff", "Mars");
-        taskService.createTask(1L, "Bore holes", 1L);
-        subtaskService.createSubtask(1L, 1L, "Get borer", "Admin", new ArrayList<>());
-        timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
-
         TimeCommit timeCommit = timeCommitRepo.findById(1L).get();
 
-        assertEquals(Long.valueOf(0), timeCommit.getTime());
+        assertEquals(Long.valueOf(22), timeCommit.getTime());
         timeCommitService.updateTimeCommit(1L, 1L, 5L);
         assertEquals(Long.valueOf(5), timeCommit.getTime());
     }

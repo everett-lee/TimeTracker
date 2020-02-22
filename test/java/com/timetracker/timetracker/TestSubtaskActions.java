@@ -146,6 +146,9 @@ public class TestSubtaskActions {
     public void testDeleteSubtaskDependencyMaintained() throws SubtaskNotFoundException, TaskNotFoundException, DeletedDependencyException {
         // there are two subtasks
         assertEquals(2, subtaskRepo.count());
+
+        taskRepo.findById(1L).get().getSubtasks().forEach( x -> System.out.println(x.getSubtaskName()));
+
         assertEquals(2, taskRepo.findById(1L).get().getSubtasks().size());
 
         subtaskService.deleteSubtask(1L, 1L);
