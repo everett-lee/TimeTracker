@@ -123,7 +123,7 @@ public class TestSubtaskActions {
         // there is one subtask of the  task
         assertEquals(1, taskRepo.findById(3L).get().getSubtasks().size());
 
-        subtaskService.deleteSubtask(1L, 3L, 3L);
+        subtaskService.deleteSubtask(1L, 3L);
 
         // there is no remaining subtask
         assertEquals(0, taskRepo.findById(3L).get().getSubtasks().size());
@@ -137,7 +137,7 @@ public class TestSubtaskActions {
         subtask.setOwnerId(3L);
         subtaskRepo.save(subtask);
 
-        subtaskService.deleteSubtask(3L, 1L, 1L);
+        subtaskService.deleteSubtask(3L,  1L);
     }
 
 
@@ -152,7 +152,7 @@ public class TestSubtaskActions {
 
         assertEquals(2, taskRepo.findById(1L).get().getSubtasks().size());
 
-        subtaskService.deleteSubtask(1L, 1L,1L);
+        subtaskService.deleteSubtask(1L,1L);
     }
 
 

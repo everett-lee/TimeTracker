@@ -37,13 +37,9 @@ public class TestTaskActions {
     @Autowired
     TaskService taskService;
     @Autowired
-    SubtaskService subtaskService;
-    @Autowired
     TaskRepository taskRepo;
     @Autowired
     ClientRepository clientRepo;
-    @Autowired
-    SubtaskRepository subtaskRepository;
 
     // expect successful addition of task where user's id matches task
     // owner id

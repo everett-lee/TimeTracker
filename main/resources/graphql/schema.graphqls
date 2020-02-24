@@ -32,7 +32,6 @@ type Mutation {
 
   deleteSubtask(
             ownerId: ID!,
-            taskId: ID!,
             subtaskId:ID!
         ) : Boolean!
 

@@ -74,12 +74,11 @@ public class SubtaskService {
 
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
-    public boolean deleteSubtask(Long ownerId, Long taskId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException, TaskNotFoundException {
+    public boolean deleteSubtask(Long ownerId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException, TaskNotFoundException {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
-        Task task = taskRepo.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException(taskId));
+        Task task = subtask.getTask();
 
         if (subtask.getOwnerId() != ownerId) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE +  "Subtask");

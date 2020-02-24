@@ -68,8 +68,8 @@ public class Mutation implements GraphQLMutationResolver {
         return subtaskService.createSubtask(ownerId, taskId, subtaskName, category, dependsOnIds);
     }
 
-    public boolean deleteSubtask(Long ownerId, Long taskId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException, TaskNotFoundException {
-        return  subtaskService.deleteSubtask(ownerId, taskId, subtaskId);
+    public boolean deleteSubtask(Long ownerId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException, TaskNotFoundException {
+        return  subtaskService.deleteSubtask(ownerId, subtaskId);
     }
     public Subtask setSubtaskComplete(Long ownerId, Long subtaskId, boolean complete) throws SubtaskNotFoundException {
         return subtaskService.setSubtaskComplete(ownerId, subtaskId, complete);
