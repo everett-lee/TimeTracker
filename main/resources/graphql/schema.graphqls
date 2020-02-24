@@ -32,6 +32,7 @@ type Mutation {
 
   deleteSubtask(
             ownerId: ID!,
+            taskId: ID!,
             subtaskId:ID!
         ) : Boolean!
 
@@ -98,7 +99,6 @@ type Subtask {
 type TimeCommit {
   id: ID!
   ownerId: ID!
-  subtask: Subtask!
   date: String!
   time: Long!
 }

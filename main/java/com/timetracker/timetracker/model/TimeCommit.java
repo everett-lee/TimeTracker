@@ -20,10 +20,6 @@ public class TimeCommit {
 
     private Long ownerId;
 
-    @ManyToOne
-    @JoinColumn(name="subtask_fk")
-    private Subtask subtask;
-
     // date of the time commit
     private LocalDate date;
 

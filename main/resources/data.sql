@@ -14,6 +14,11 @@ INSERT INTO subtask (owner_id, subtask_name, category, completed, task_fk)
 VALUES (1, 'Check the booster', 'Mechanic', false, 1);
 INSERT INTO subtask (owner_id, subtask_name, category, completed, task_fk)
 VALUES (1, 'Buy new rocket fuel', 'Shopping', false, 1);
+INSERT INTO subtask (owner_id, subtask_name, category, completed, task_fk)
+VALUES (1, 'Practice kata', 'ninja', false, 3);
+
+INSERT INTO subtask_dependentsubtask (main_subtasktask_fk, dependent_subtask_fk)
+VALUES (2, 1);
 
 INSERT INTO time_commit (owner_id, subtask_fk, date, time)
 VALUES (1, 1, '2020-01-01', 22);
@@ -24,5 +29,3 @@ VALUES (1, 2, '2020-02-01', 55);
 INSERT INTO time_commit (owner_id, subtask_fk, date, time)
 VALUES (1, 2, '2020-02-02', 10);
 
-INSERT INTO subtask_dependentsubtask (main_subtasktask_fk, dependent_subtask_fk)
-VALUES (2, 1);

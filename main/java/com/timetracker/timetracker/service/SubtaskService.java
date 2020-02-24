@@ -14,12 +14,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SubtaskService {
+
     private SubtaskRepository subtaskRepo;
     private TaskRepository taskRepo;
     private TimeCommitRepository timeCommitRepo;
@@ -56,8 +58,10 @@ public class SubtaskService {
         // add the subtask's dependencies
         List<Subtask> dependsOn = new ArrayList<>();
         for (Long id: dependsOnIds) {
-            dependsOn.add(subtaskRepo.findById(id)
-                    .orElseThrow(() -> new SubtaskNotFoundException(id)));
+            Subtask parent = subtaskRepo.findById(id)
+                    .orElseThrow(() -> new SubtaskNotFoundException(id));
+
+            dependsOn.add(parent);
         }
         subtask.setDependsOn(dependsOn);
 
@@ -65,34 +69,29 @@ public class SubtaskService {
         // include the new addition
         task.getSubtasks().add(subtask);
 
-        subtaskRepo.save(subtask);
         return subtask;
     }
 
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
-    public boolean deleteSubtask(Long ownerId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException {
+    public boolean deleteSubtask(Long ownerId, Long taskId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException, TaskNotFoundException {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
+
+        Task task = taskRepo.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
 
         if (subtask.getOwnerId() != ownerId) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE +  "Subtask");
         }
 
         // check if any subtask depends on the one that is to be deleted
-        long dependencies = subtaskRepo.findByOwnerId(ownerId)
-                // don't include this subtask
-                .stream().filter( el -> el.getId() != subtaskId)
-                // map each subtask to its dependencies
-                .map( st -> st.getDependsOn())
-                .flatMap( arr -> arr.stream())
-                .count();
-
+        long dependencies = subtask.getDependents().size();
         if (dependencies > 0) {
             throw new DeletedDependencyException(subtaskId);
         }
 
-        subtaskRepo.deleteById(subtaskId);
+        task.getSubtasks().removeIf( st -> st.getId().equals(subtaskId));
         return true;
     }
 
@@ -115,6 +114,12 @@ public class SubtaskService {
 
         subtask.setCompleted(complete);
         return subtask;
+    }
+
+    @Transactional(readOnly = true)
+    @PreAuthorize("#subtask.getOwnerId() == principal.id")
+    public List<Subtask> dependents(Subtask subtask) throws SubtaskNotFoundException {
+        return subtask.getDependents();
     }
 
     @Transactional(readOnly = true)

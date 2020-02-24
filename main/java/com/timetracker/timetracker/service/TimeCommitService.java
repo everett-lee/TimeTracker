@@ -60,7 +60,6 @@ public class TimeCommitService {
         timeCommit.setDate(LocalDate.now());
         timeCommit.setTime(time);
         timeCommit.setOwnerId(ownerId);
-        timeCommit.setSubtask(subtask);
         timeCommitRepo.save(timeCommit);
 
         List<TimeCommit> commits = subtask.getTimeCommits();

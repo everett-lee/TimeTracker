@@ -23,7 +23,7 @@ public class Subtask {
     private Long ownerId;
 
     @ManyToOne
-    @JoinColumn(name="task_fk")
+    @JoinColumn(name = "task_fk")
     private Task task;
 
     private String subtaskName;
@@ -37,25 +37,22 @@ public class Subtask {
     private boolean completed;
 
     // the time committed to this subtask
-    @OneToMany(
-            mappedBy = "subtask",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "subtask_fk")
     private List<TimeCommit> timeCommits;
 
-    // the subtasks this subtask depends on
-    @ManyToMany(
-            fetch = FetchType.EAGER
-    )
+    @ManyToMany
     @JoinTable(name = "subtask_dependentsubtask",
-            joinColumns = @JoinColumn(
-                    name = "main_subtasktask_fk"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "dependent_subtask_fk"
-            ))
+            joinColumns = {@JoinColumn(name = "main_subtasktask_fk")},
+            inverseJoinColumns = {@JoinColumn(name = "dependent_subtask_fk")}
+    )
     private List<Subtask> dependsOn;
 
+    @ManyToMany( mappedBy = "dependsOn")
+    private List<Subtask> dependents;
+
+    @Override
+    public String toString() {
+        return String.format("Name: %s Category: %s", this.subtaskName, this.category);
+    }
 }

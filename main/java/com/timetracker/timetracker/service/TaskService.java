@@ -53,8 +53,8 @@ public class TaskService {
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
     public boolean deleteTask(Long ownerId, Long taskId) throws TaskNotFoundException {
-        Task task  = taskRepo.findById(taskId)
-                .orElseThrow( () -> new TaskNotFoundException(taskId));
+        Task task = taskRepo.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
 
         if (task.getOwnerId() != ownerId) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
