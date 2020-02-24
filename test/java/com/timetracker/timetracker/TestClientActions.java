@@ -27,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
+@Transactional
 public class TestClientActions {
     @Autowired
     ClientService clientService;
@@ -43,7 +44,6 @@ public class TestClientActions {
 
     // expect successful creation of client
     @Test
-    @Transactional
     @WithMockCustomUser( id = 1L )
     public void testCreateClient() {
         String name = "Thom Yorke";
@@ -55,7 +55,6 @@ public class TestClientActions {
 
     // expect error where wrong id provided
     @Test(expected = AccessDeniedException.class)
-    @Transactional
     @WithMockCustomUser( id = 2L )
     public void testCreateClientinvalidId() {
         String name = "Thom Yorke";
@@ -83,19 +82,7 @@ public class TestClientActions {
         clientService.deleteClient(1L, 1L);
     }
 
-    // expect deletion to fail due to client -> task relationship
-    @Test (expected =  DataIntegrityViolationException.class)
-    @WithMockCustomUser( id = 1L )
-    public void testDeleteClientWithRelationship() throws ClientNotFoundException {
-        String name = "Thom Yorke";
-        clientService.createClient(1L, name, "Soundtracks", "UK");
-        taskService.createTask(1L, "", 1L);
-
-        clientService.deleteClient(1L, 1L);
-    }
-
     @Test
-    @Transactional
     @WithMockCustomUser( id = 1L )
     public void testCreateGetAllByOwnerId() {
         int n = clientService.getAllClientsByOwnerId(1L).size();
@@ -106,7 +93,6 @@ public class TestClientActions {
 
     // expect error where wrong id used for look up
     @Test(expected = AccessDeniedException.class)
-    @Transactional
     @WithMockCustomUser( id = 2L )
     public void testCreateGetAllByOwnerIdInvalidId() {
 

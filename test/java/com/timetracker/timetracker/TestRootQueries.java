@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
+@Transactional
 public class TestRootQueries {
 
     @Autowired
@@ -34,7 +35,6 @@ public class TestRootQueries {
     TaskRepository taskRepo;
 
     @Test
-    @Transactional
     @WithMockCustomUser( id = 1L )
     public void testAllTasksTwoEntries() throws ClientNotFoundException {
         String[] taskNames = {"Build rocket", "Bore some holes", "Nunchucks practice"};
@@ -51,7 +51,6 @@ public class TestRootQueries {
     }
 
     @Test
-    @Transactional
     @WithMockCustomUser( id = 3L )
     public void testAllTasksNoEntries() {
         List<Task> tasks = taskService.getAllTasksByOwnerId(3L);
@@ -63,7 +62,6 @@ public class TestRootQueries {
     // expect exception where user provides invalid id when searching
     // for tasks
     @Test(expected = AccessDeniedException.class)
-    @Transactional
     @WithMockCustomUser( id = 2L )
     public void testAllTasksTwoEntriesInvalidId() throws ClientNotFoundException {
 

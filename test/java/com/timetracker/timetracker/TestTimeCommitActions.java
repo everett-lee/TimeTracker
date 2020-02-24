@@ -32,6 +32,7 @@ import static org.mockito.Mockito.when;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
+@Transactional
 public class TestTimeCommitActions {
 
     @Autowired
@@ -120,7 +121,6 @@ public class TestTimeCommitActions {
 
     // expect successful update of time
     @Test
-    @Transactional
     @WithMockCustomUser(id = 1L)
     public void testUpdateTime() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, TimeCommitNotFoundException {
         TimeCommit timeCommit = timeCommitRepo.findById(1L).get();

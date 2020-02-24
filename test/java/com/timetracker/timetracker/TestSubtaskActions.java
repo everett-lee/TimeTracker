@@ -41,6 +41,7 @@ import static org.mockito.Mockito.when;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
+@Transactional
 public class TestSubtaskActions {
 
     @Autowired
@@ -63,7 +64,6 @@ public class TestSubtaskActions {
     // expect successful addition of subtask where user's id matches task
     // owner id
     @Test
-    @Transactional
     @WithMockCustomUser(id = 1L)
     public void testCreateSubtask() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
         String subtaskOneName = "Gardening";
@@ -144,7 +144,6 @@ public class TestSubtaskActions {
     // expect subtask deletion to fail if it is a dependency
     @Test(expected = DeletedDependencyException.class)
     @WithMockCustomUser(id = 1L)
-    @Transactional
     public void testDeleteSubtaskDependencyMaintained() throws SubtaskNotFoundException, TaskNotFoundException, DeletedDependencyException {
         // there are two subtasks
         assertEquals(3, subtaskRepo.count());
@@ -159,7 +158,6 @@ public class TestSubtaskActions {
 
     // test to check owner Task's subtasks are updated to reflect new additions
     @Test
-    @Transactional
     @WithMockCustomUser(id = 1L)
     public void testSubtasksSetValidId() throws TaskNotFoundException, SubtaskNotFoundException {
         subtaskService.createSubtask(1L, 1L, "Buy snakes", "Admin", new ArrayList<>());
@@ -198,7 +196,6 @@ public class TestSubtaskActions {
 
     // check that subtask time commits are returned
     @Test
-    @Transactional
     @WithMockCustomUser(id = 1L)
     public void testSubtaskTimeCommitsReturned() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException {
         timeCommitService.createOrUpdateTimeCommit(1L, 1L, 0L);
