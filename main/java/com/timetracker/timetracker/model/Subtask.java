@@ -37,18 +37,21 @@ public class Subtask {
     private boolean completed;
 
     // the time committed to this subtask
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true)
     @JoinColumn(name = "subtask_fk")
     private List<TimeCommit> timeCommits;
 
-    @ManyToMany
+    @ManyToMany( fetch = FetchType.EAGER )
     @JoinTable(name = "subtask_dependentsubtask",
             joinColumns = {@JoinColumn(name = "main_subtasktask_fk")},
             inverseJoinColumns = {@JoinColumn(name = "dependent_subtask_fk")}
     )
     private List<Subtask> dependsOn;
 
-    @ManyToMany( mappedBy = "dependsOn")
+    @ManyToMany(mappedBy = "dependsOn")
     private List<Subtask> dependents;
 
     @Override
