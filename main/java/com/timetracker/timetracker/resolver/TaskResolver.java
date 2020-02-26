@@ -2,35 +2,32 @@ package com.timetracker.timetracker.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.timetracker.timetracker.model.Client;
-import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.model.Subtask;
-import com.timetracker.timetracker.repository.ClientRepository;
-import com.timetracker.timetracker.repository.SubtaskRepository;
+import com.timetracker.timetracker.model.Task;
+import com.timetracker.timetracker.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class TaskResolver implements GraphQLResolver<Task> {
-    private ClientRepository clientRepo;
-    private SubtaskRepository subtaskRepo;
+    private TaskService taskService;
 
-    public TaskResolver(ClientRepository clientRepo, SubtaskRepository subtaskRepo) {
-        this.clientRepo = clientRepo;
-        this.subtaskRepo = subtaskRepo;
+    @Autowired
+    public TaskResolver(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     // return the list of Subtasks associated
     // with this Task
-    public List<Subtask> subtasks(Task task) {
-        List<Subtask> out = new ArrayList<>();
-
-        return task.getSubtasks();
+    public Set<Subtask> subtasks(Task task) {
+        return taskService.getSubtasksByTask(task);
     }
 
     // return the Client associated with this Task
     public Client client(Task task) {
-        return clientRepo.findById(task.getClient().getId()).get();
+        return taskService.getClientByTask(task);
     }
 }

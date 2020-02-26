@@ -1,11 +1,13 @@
 package com.timetracker.timetracker.model;
 
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Subtasks define the work involved in completing
@@ -49,13 +51,26 @@ public class Subtask {
             joinColumns = {@JoinColumn(name = "main_subtasktask_fk")},
             inverseJoinColumns = {@JoinColumn(name = "dependent_subtask_fk")}
     )
-    private List<Subtask> dependsOn;
+    private Set<Subtask> dependsOn;
 
     @ManyToMany(mappedBy = "dependsOn")
-    private List<Subtask> dependents;
+    private Set<Subtask> dependents;
 
     @Override
     public String toString() {
         return String.format("Name: %s Category: %s", this.subtaskName, this.category);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Subtask)) return false;
+        Subtask other = (Subtask) o;
+        if (this.getSubtaskName() != other.getSubtaskName()) return false;
+        if (this.getOwnerId() != other.getOwnerId()) return false;
+        if (this.getDateAdded() != getDateAdded()) return false;
+        if (this.getDateCompleted() != getDateCompleted()) return false;
+        if (this.completed != other.completed) return false;
+        return true;
     }
 }

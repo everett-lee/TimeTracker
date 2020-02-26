@@ -8,6 +8,7 @@ import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class SubtaskResolver implements GraphQLResolver<Subtask> {
@@ -19,7 +20,7 @@ public class SubtaskResolver implements GraphQLResolver<Subtask> {
 
     // return the list of Subtasks that this Subtask
     // depends on
-    public List<Subtask> dependsOn(Subtask subtask) throws SubtaskNotFoundException {
+    public Set<Subtask> dependsOn(Subtask subtask) throws SubtaskNotFoundException {
         return subtaskService.dependsOn(subtask);
     }
 

@@ -1,9 +1,6 @@
 package com.timetracker.timetracker;
 
 import com.timetracker.timetracker.model.Task;
-import com.timetracker.timetracker.repository.ClientRepository;
-import com.timetracker.timetracker.repository.TaskRepository;
-import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.TaskService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import org.junit.Test;
@@ -26,13 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class TestRootQueries {
 
     @Autowired
-    ClientService clientService;
-    @Autowired
-    ClientRepository clientRepo;
-    @Autowired
     TaskService taskService;
-    @Autowired
-    TaskRepository taskRepo;
 
     @Test
     @WithMockCustomUser( id = 1L )

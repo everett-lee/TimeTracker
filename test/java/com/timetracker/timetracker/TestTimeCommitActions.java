@@ -9,10 +9,10 @@ import com.timetracker.timetracker.repository.TimeCommitRepository;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
+import com.timetracker.timetracker.service.TimeCommitService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
-import com.timetracker.timetracker.service.TimeCommitService;
 import com.timetracker.timetracker.service.exceptions.TimeCommitNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +22,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -36,17 +34,7 @@ import static org.mockito.Mockito.when;
 public class TestTimeCommitActions {
 
     @Autowired
-    ClientService clientService;
-    @Autowired
-    TaskService taskService;
-    @Autowired
-    SubtaskService subtaskService;
-    @Autowired
     TimeCommitService timeCommitService;
-    @Autowired
-    TaskRepository taskRepo;
-    @Autowired
-    ClientRepository clientRepo;
     @Autowired
     SubtaskRepository subtaskRepo;
     @Autowired

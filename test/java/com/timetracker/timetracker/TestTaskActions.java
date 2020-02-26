@@ -2,10 +2,8 @@ package com.timetracker.timetracker;
 
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
-import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.service.ClientService;
-import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;

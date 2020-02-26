@@ -2,10 +2,9 @@ package com.timetracker.timetracker.model;
 
 import lombok.Data;
 
-import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 /**
  *  Top level task. This represents the overall goal
@@ -39,7 +38,7 @@ public class Task {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Subtask> subtasks;
+    private Set<Subtask> subtasks;
 
     private boolean completed;
 

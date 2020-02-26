@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class SubtaskService {
@@ -56,7 +58,7 @@ public class SubtaskService {
         subtask.setTimeCommits(new ArrayList<>());
 
         // add the subtask's dependencies
-        List<Subtask> dependsOn = new ArrayList<>();
+        Set<Subtask> dependsOn = new HashSet<>();
         for (Long id: dependsOnIds) {
             Subtask parent = subtaskRepo.findById(id)
                     .orElseThrow(() -> new SubtaskNotFoundException(id));
@@ -117,13 +119,13 @@ public class SubtaskService {
 
     @Transactional(readOnly = true)
     @PreAuthorize("#subtask.getOwnerId() == principal.id")
-    public List<Subtask> dependents(Subtask subtask) throws SubtaskNotFoundException {
+    public Set<Subtask> dependents(Subtask subtask) throws SubtaskNotFoundException {
         return subtask.getDependents();
     }
 
     @Transactional(readOnly = true)
     @PreAuthorize("#subtask.getOwnerId() == principal.id")
-    public List<Subtask> dependsOn(Subtask subtask) throws SubtaskNotFoundException {
+    public Set<Subtask> dependsOn(Subtask subtask) throws SubtaskNotFoundException {
         return subtask.getDependsOn();
     }
 

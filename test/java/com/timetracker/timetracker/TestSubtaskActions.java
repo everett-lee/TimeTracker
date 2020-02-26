@@ -6,7 +6,6 @@ import com.timetracker.timetracker.model.TimeCommit;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
-import com.timetracker.timetracker.repository.TimeCommitRepository;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
@@ -58,8 +57,6 @@ public class TestSubtaskActions {
     ClientRepository clientRepo;
     @Autowired
     SubtaskRepository subtaskRepo;
-    @Autowired
-    TimeCommitRepository timeCommitRepo;
 
     // expect successful addition of subtask where user's id matches task
     // owner id
@@ -79,14 +76,12 @@ public class TestSubtaskActions {
 
         // there are two subtasks
         assertEquals(2, t.getSubtasks().size());
-        // first subtask has correct name
-        assertEquals(t.getSubtasks().get(0).getSubtaskName(), subtaskOneName);
-        // second subtask has correct name
-        assertEquals(t.getSubtasks().get(1).getSubtaskName(), subtaskTwoName);
+        Subtask st1 = t.getSubtasks().stream().filter( st -> st.getSubtaskName().equals(subtaskOneName)).findFirst().get();
+        Subtask st2 = t.getSubtasks().stream().filter( st -> st.getSubtaskName().equals(subtaskTwoName)).findFirst().get();
         // first subtask has zero dependencies
-        assertEquals(t.getSubtasks().get(0).getDependsOn().size(), 0);
+        assertEquals(st1.getDependsOn().size(), 0);
         // second subtask has one dependency
-        assertEquals(t.getSubtasks().get(1).getDependsOn().size(), 1);
+        assertEquals(st2.getDependsOn().size(), 1);
     }
 
     // expect exception where subtask owner id does not match user id
@@ -163,6 +158,8 @@ public class TestSubtaskActions {
         subtaskService.createSubtask(1L, 1L, "Buy snakes", "Admin", new ArrayList<>());
 
         Task t1 = taskRepo.findAllByOwnerId(1L).get(0);
+
+        t1.getSubtasks().forEach(t -> System.out.println(t.getSubtaskName()));
 
         assertEquals(3, t1.getSubtasks().size());
     }

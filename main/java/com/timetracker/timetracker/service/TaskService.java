@@ -1,5 +1,7 @@
 package com.timetracker.timetracker.service;
 
+import com.timetracker.timetracker.model.Client;
+import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
@@ -13,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TaskService {
@@ -44,7 +48,7 @@ public class TaskService {
 
         task.setDateAdded(LocalDate.now());
         task.setCompleted(false);
-        task.setSubtasks(new ArrayList<>());
+        task.setSubtasks(new HashSet<>());
 
         taskRepo.save(task);
         return task;
@@ -93,5 +97,15 @@ public class TaskService {
 
         List<Task> tasks = taskRepo.findAllByOwnerId(ownerId);
         return tasks;
+    }
+
+    @Transactional
+    public Set<Subtask> getSubtasksByTask(Task task) {
+        return task.getSubtasks();
+    }
+
+    @Transactional
+    public Client getClientByTask(Task task) {
+        return task.getClient();
     }
 }
