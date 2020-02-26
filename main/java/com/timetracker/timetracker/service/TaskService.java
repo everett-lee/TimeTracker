@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +21,7 @@ import java.util.Set;
 @Service
 public class TaskService {
     private TaskRepository taskRepo;
+    private TaskService taskService;
     private SubtaskRepository subtaskRepo;
     private ClientRepository clientRepo;
 
@@ -96,6 +96,7 @@ public class TaskService {
     public List<Task> getAllTasksByOwnerId(Long ownerId) {
 
         List<Task> tasks = taskRepo.findAllByOwnerId(ownerId);
+
         return tasks;
     }
 

@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
-@Transactional
 public class TestTimeCommitActions {
 
     @Autowired
@@ -115,6 +114,8 @@ public class TestTimeCommitActions {
 
         assertEquals(Long.valueOf(22), timeCommit.getTime());
         timeCommitService.updateTimeCommit(1L, 1L, 5L);
+
+        timeCommit = timeCommitRepo.findById(1L).get();
         assertEquals(Long.valueOf(5), timeCommit.getTime());
     }
 }

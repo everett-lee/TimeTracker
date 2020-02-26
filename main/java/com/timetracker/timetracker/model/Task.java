@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -38,7 +39,7 @@ public class Task {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<Subtask> subtasks;
+    private Set<Subtask> subtasks = new HashSet<>();
 
     private boolean completed;
 

@@ -1,11 +1,7 @@
 package com.timetracker.timetracker;
 
 import com.timetracker.timetracker.repository.ClientRepository;
-import com.timetracker.timetracker.repository.SubtaskRepository;
-import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.service.ClientService;
-import com.timetracker.timetracker.service.SubtaskService;
-import com.timetracker.timetracker.service.TaskService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,7 +21,6 @@ import static org.junit.Assert.assertEquals;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
-@Transactional
 public class TestClientActions {
     @Autowired
     ClientService clientService;

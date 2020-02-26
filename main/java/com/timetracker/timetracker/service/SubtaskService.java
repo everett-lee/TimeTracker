@@ -9,6 +9,7 @@ import com.timetracker.timetracker.repository.TimeCommitRepository;
 import com.timetracker.timetracker.service.exceptions.DeletedDependencyException;
 import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
+import org.hibernate.Hibernate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,7 @@ public class SubtaskService {
         // update the owning task's subtasks to
         // include the new addition
         task.getSubtasks().add(subtask);
+        subtask.setTask(task);
 
         return subtask;
     }
@@ -108,7 +110,7 @@ public class SubtaskService {
 
         if (complete) {
             subtask.setDateCompleted(LocalDate.now());
-        // if setting from complete -> not complete date should be set to null
+            // if setting from complete -> not complete date should be set to null
         } else {
             subtask.setDateCompleted(null);
         }
