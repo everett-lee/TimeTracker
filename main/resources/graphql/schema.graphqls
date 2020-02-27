@@ -93,6 +93,7 @@ type Subtask {
   completed: Boolean!
   timeCommits: [TimeCommit]!
   dependsOn: [Subtask]!
+  totalTime: Long!
 }
 
 type TimeCommit {

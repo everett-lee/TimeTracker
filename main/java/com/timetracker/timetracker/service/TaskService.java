@@ -8,6 +8,7 @@ import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
+import org.hibernate.Hibernate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -109,4 +110,5 @@ public class TaskService {
     public Client getClientByTask(Task task) {
         return task.getClient();
     }
+
 }

@@ -28,4 +28,9 @@ public class SubtaskResolver implements GraphQLResolver<Subtask> {
     public List<TimeCommit> timeCommits(Subtask subtask) {
         return subtaskService.timeCommits(subtask);
     }
+
+    // return the sum of TimeCommit times associated with this task;
+    public Long totalTime(Subtask subtask) {
+        return subtaskService.totalTime(subtask);
+    }
 }

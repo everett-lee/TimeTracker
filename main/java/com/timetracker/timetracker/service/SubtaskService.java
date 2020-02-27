@@ -136,4 +136,12 @@ public class SubtaskService {
     public List<TimeCommit> timeCommits(Subtask subtask) {
         return subtask.getTimeCommits();
     }
+
+    @Transactional
+    @PreAuthorize("#subtask.getOwnerId() == principal.id")
+    public long totalTime(Subtask subtask) {
+        return subtask.getTimeCommits().stream()
+                .mapToLong( tc -> tc.getTime())
+                .sum();
+    }
 }
