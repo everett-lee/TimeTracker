@@ -8,7 +8,6 @@ import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
-import org.hibernate.Hibernate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -23,16 +22,16 @@ import java.util.Set;
 public class TaskService {
     private TaskRepository taskRepo;
     private TaskService taskService;
-    private SubtaskRepository subtaskRepo;
+    private SubtaskService subtaskService;
     private ClientRepository clientRepo;
 
     private String ACCESS_DENIED_MESSAGE = "User does not have ownership of this ";
 
     public TaskService(TaskRepository taskRepo, ClientRepository clientRepo,
-                       SubtaskRepository subtaskRepo) {
+                       SubtaskService subtaskService) {
         this.taskRepo = taskRepo;
         this.clientRepo = clientRepo;
-        this.subtaskRepo = subtaskRepo;
+        this.subtaskService = subtaskService;
     }
 
     @Transactional
@@ -111,4 +110,11 @@ public class TaskService {
         return task.getClient();
     }
 
+    @Transactional
+    @PreAuthorize("#subtask.getOwnerId() == principal.id")
+    public long totalTime(Task task) {
+        return task.getSubtasks().stream()
+                .mapToLong( st -> subtaskService.totalTime(st))
+                .sum();
+    }
 }

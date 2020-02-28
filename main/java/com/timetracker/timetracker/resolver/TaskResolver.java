@@ -29,4 +29,9 @@ public class TaskResolver implements GraphQLResolver<Task> {
     public Client client(Task task) {
         return taskService.getClientByTask(task);
     }
+
+    // return the Client associated with this Task
+    public Long totalTime(Task task) {
+        return taskService.totalTime(task);
+    }
 }

@@ -81,6 +81,7 @@ type Task {
   dateCompleted: String
   subtasks: [Subtask]!
   completed: Boolean!
+  totalTime: Long!
 }
 
 type Subtask {

@@ -9,12 +9,10 @@ import com.timetracker.timetracker.repository.TimeCommitRepository;
 import com.timetracker.timetracker.service.exceptions.DeletedDependencyException;
 import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
-import org.hibernate.Hibernate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.time.LocalDate;
 import java.util.ArrayList;

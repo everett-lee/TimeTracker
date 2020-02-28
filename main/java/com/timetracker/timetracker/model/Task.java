@@ -42,12 +42,4 @@ public class Task {
     private Set<Subtask> subtasks = new HashSet<>();
 
     private boolean completed;
-
-    // Get sum of all timecommits of all subtasks
-    public long getTotalTime() {
-        return getSubtasks().stream()
-        .map( subtask -> subtask.getTimeCommits())
-        .flatMapToLong(timeCommits -> timeCommits.stream()
-                .mapToLong(timeCommit -> timeCommit.getTime())).sum();
-    }
 }

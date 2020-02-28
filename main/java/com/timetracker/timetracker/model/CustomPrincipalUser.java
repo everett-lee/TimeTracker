@@ -12,11 +12,6 @@ import java.util.Collection;
 public class CustomPrincipalUser extends org.springframework.security.core.userdetails.User  {
     private Long id;
 
-
-    public CustomPrincipalUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
-    }
-
     public CustomPrincipalUser(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         setId(id);

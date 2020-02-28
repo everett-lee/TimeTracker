@@ -1,8 +1,6 @@
 package com.timetracker.timetracker.model;
 
 import lombok.Data;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
