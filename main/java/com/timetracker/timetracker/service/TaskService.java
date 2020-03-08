@@ -111,7 +111,7 @@ public class TaskService {
     }
 
     @Transactional
-    @PreAuthorize("#subtask.getOwnerId() == principal.id")
+    @PreAuthorize("#task.getOwnerId() == principal.id")
     public long totalTime(Task task) {
         return task.getSubtasks().stream()
                 .mapToLong( st -> subtaskService.totalTime(st))

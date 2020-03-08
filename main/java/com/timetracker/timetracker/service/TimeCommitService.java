@@ -99,4 +99,17 @@ public class TimeCommitService {
         timeCommit.setTime(time);
         return timeCommit;
     }
+
+    @Transactional
+    @PreAuthorize("#ownerId == principal.id")
+    public List<TimeCommit> getAllTimeCommitsByOwnerAndSubtaskIds(Long ownerId, Long subtaskId) throws SubtaskNotFoundException {
+        Subtask subtask = subtaskRepo.findById(subtaskId)
+                .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
+
+        if (subtask.getOwnerId() != ownerId) {
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Subtask");
+        }
+
+        return subtask.getTimeCommits();
+    }
 }

@@ -23,6 +23,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -117,5 +119,14 @@ public class TestTimeCommitActions {
 
         timeCommit = timeCommitRepo.findById(1L).get();
         assertEquals(Long.valueOf(5), timeCommit.getTime());
+    }
+
+    // expect successful retrieval of timecommits
+    @Test
+    @WithMockCustomUser(id = 1L)
+    public void testGetTimeCommits() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, TimeCommitNotFoundException {
+        List<TimeCommit> timeCommits = timeCommitService.getAllTimeCommitsByOwnerAndSubtaskIds(1L, 1L);
+
+        assertEquals(2, timeCommits.size());
     }
 }

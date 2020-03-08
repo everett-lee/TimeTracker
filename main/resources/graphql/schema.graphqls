@@ -1,7 +1,8 @@
 
 type Query {
-    getAllTasks(ownerId: ID): [Task]!
-    getAllClients(ownerId: ID): [Client]!
+    getAllTasks(ownerId: ID!): [Task]!
+    getAllClients(ownerId: ID!): [Client]!
+    getAllTimeCommits(ownerId: ID!, subtaskId: ID!): [TimeCommit]!
 }
 
 type Mutation {
