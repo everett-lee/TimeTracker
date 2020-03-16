@@ -142,4 +142,17 @@ public class SubtaskService {
                 .mapToLong( tc -> tc.getTime())
                 .sum();
     }
+
+    @Transactional
+    @PreAuthorize("#ownerId == principal.id")
+    public Set<Subtask> getAllSubtasksByOwnerAndSubtaskIds(Long ownerId, Long taskId) throws TaskNotFoundException {
+        Task task = taskRepo.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+
+        if (task.getOwnerId() != ownerId) {
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
+        }
+
+        return task.getSubtasks();
+    }
 }

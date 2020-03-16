@@ -21,11 +21,11 @@ INSERT INTO subtask_dependentsubtask (main_subtasktask_fk, dependent_subtask_fk)
 VALUES (2, 1);
 
 INSERT INTO time_commit (owner_id, subtask_fk, date, time)
-VALUES (1, 1, '2020-01-01', 540000);
+VALUES (1, 1, '2020-01-01', 54000);
 INSERT INTO time_commit (owner_id, subtask_fk, date, time)
 VALUES (1, 1, '2020-01-02', 22000);
 INSERT INTO time_commit (owner_id, subtask_fk, date, time)
-VALUES (1, 2, '2020-02-01', 340000);
+VALUES (1, 2, '2020-02-01', 34000);
 INSERT INTO time_commit (owner_id, subtask_fk, date, time)
-VALUES (1, 2, '2020-02-02', 450000);
+VALUES (1, 2, '2020-02-02', 45000);
 

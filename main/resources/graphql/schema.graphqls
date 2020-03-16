@@ -2,6 +2,7 @@
 type Query {
     getAllTasks(ownerId: ID!): [Task]!
     getAllClients(ownerId: ID!): [Client]!
+    getAllSubtasks(ownerId: ID!, taskId: ID!): [Subtask]!
     getAllTimeCommits(ownerId: ID!, subtaskId: ID!): [TimeCommit]!
 }
 

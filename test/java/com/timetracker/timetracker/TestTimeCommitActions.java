@@ -2,13 +2,8 @@ package com.timetracker.timetracker;
 
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.TimeCommit;
-import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.repository.SubtaskRepository;
-import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.repository.TimeCommitRepository;
-import com.timetracker.timetracker.service.ClientService;
-import com.timetracker.timetracker.service.SubtaskService;
-import com.timetracker.timetracker.service.TaskService;
 import com.timetracker.timetracker.service.TimeCommitService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import com.timetracker.timetracker.service.exceptions.SubtaskNotFoundException;
@@ -21,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
