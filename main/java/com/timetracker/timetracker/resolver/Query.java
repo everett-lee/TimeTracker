@@ -27,7 +27,8 @@ public class Query implements GraphQLQueryResolver {
     private TimeCommitService timeCommitService;
 
     @Autowired
-    public Query(TaskService taskService, ClientService clientService, TimeCommitService timeCommitService, SubtaskService subtaskService) {
+    public Query(TaskService taskService, ClientService clientService,
+                 TimeCommitService timeCommitService, SubtaskService subtaskService) {
         this.taskService = taskService;
         this.subtaskService = subtaskService;
         this.clientService = clientService;
