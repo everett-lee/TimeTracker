@@ -39,6 +39,10 @@ public class Query implements GraphQLQueryResolver {
         return taskService.getAllTasksByOwnerId(ownerId);
     }
 
+    public Task getTask(Long ownerId, Long taskId) throws TaskNotFoundException {
+        return taskService.getTaskById(ownerId, taskId);
+    }
+
     public List<Client> getAllClients(Long ownerId) {
         return clientService.getAllClientsByOwnerId(ownerId);
     }

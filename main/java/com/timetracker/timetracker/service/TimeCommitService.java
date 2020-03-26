@@ -21,6 +21,7 @@ import java.util.Optional;
 public class TimeCommitService {
     private TimeCommitRepository timeCommitRepo;
     private SubtaskRepository subtaskRepo;
+    private static final long DAY_IN_SECONDS = 86400;
 
     private String ACCESS_DENIED_MESSAGE = "User does not have ownership of this ";
 
@@ -51,7 +52,10 @@ public class TimeCommitService {
         // Update and return the existing time commit if not null
         if (existing.isPresent()) {
             timeCommit = existing.get();
-            timeCommit.setTime(timeCommit.getTime() + time);
+
+            long newTime = calculateNewTime(timeCommit.getTime(), time);
+
+            timeCommit.setTime(newTime);
             return timeCommit;
         }
 
@@ -66,6 +70,18 @@ public class TimeCommitService {
         commits.sort(Comparator.comparing(tc -> tc.getDate()));
 
         return timeCommit;
+    }
+
+    private long calculateNewTime(long oldTime, long timeIn) {
+        long newTime = oldTime + timeIn;
+
+        // No more than one day in seconds can be added to a single
+        // timecommit
+        if (newTime > DAY_IN_SECONDS) {
+            return DAY_IN_SECONDS;
+        }
+
+        return newTime;
     }
 
     @Transactional

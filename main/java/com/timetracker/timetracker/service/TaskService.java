@@ -4,7 +4,6 @@ import com.timetracker.timetracker.model.Client;
 import com.timetracker.timetracker.model.Subtask;
 import com.timetracker.timetracker.model.Task;
 import com.timetracker.timetracker.repository.ClientRepository;
-import com.timetracker.timetracker.repository.SubtaskRepository;
 import com.timetracker.timetracker.repository.TaskRepository;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
 import com.timetracker.timetracker.service.exceptions.TaskNotFoundException;
@@ -101,6 +100,20 @@ public class TaskService {
     }
 
     @Transactional
+    @PreAuthorize("#ownerId == principal.id")
+    public Task getTaskById(Long ownerId, Long taskId) throws TaskNotFoundException {
+        Task task = taskRepo
+                .findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
+
+        if (task.getOwnerId() != ownerId) {
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
+        }
+
+        return task;
+    }
+
+    @Transactional
     public Set<Subtask> getSubtasksByTask(Task task) {
         return task.getSubtasks();
     }
@@ -114,7 +127,7 @@ public class TaskService {
     @PreAuthorize("#task.getOwnerId() == principal.id")
     public long totalTime(Task task) {
         return task.getSubtasks().stream()
-                .mapToLong( st -> subtaskService.totalTime(st))
+                .mapToLong(st -> subtaskService.totalTime(st))
                 .sum();
     }
 }
