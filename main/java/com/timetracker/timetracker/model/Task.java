@@ -32,7 +32,7 @@ public class Task {
 
     private LocalDate dateCompleted;
 
-    // the time committed to this subtask
+    // the subtasks associated with this subtask
     @OneToMany(
             mappedBy = "task",
             fetch = FetchType.EAGER,

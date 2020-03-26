@@ -23,5 +23,4 @@ public class Client {
     private String businessType;
 
     private String location;
-
 }

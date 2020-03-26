@@ -3,6 +3,7 @@ package com.timetracker.timetracker;
 import com.timetracker.timetracker.repository.ClientRepository;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.exceptions.ClientNotFoundException;
+import com.timetracker.timetracker.service.exceptions.DeletedClientWithTaskException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class TestClientActions {
     // expect client to be deleted
     @Test
     @WithMockCustomUser( id = 1L )
-    public void testDeleteClient() throws ClientNotFoundException {
+    public void testDeleteClient() throws ClientNotFoundException, DeletedClientWithTaskException {
         String name = "Thom Yorke";
         clientService.createClient(1L, name, "Soundtracks", "UK");
 
@@ -63,7 +64,7 @@ public class TestClientActions {
     // expect deletion to fail due to wrong owner id
     @Test(expected = AccessDeniedException.class)
     @WithMockCustomUser( id = 2L )
-    public void testDeleteClientInvalidId() throws ClientNotFoundException {
+    public void testDeleteClientInvalidId() throws ClientNotFoundException, DeletedClientWithTaskException {
         clientService.deleteClient(1L, 1L);
     }
 

@@ -43,7 +43,7 @@ public class Mutation implements GraphQLMutationResolver {
         return clientService.createClient(ownerId, clientName, businessType, location);
     }
 
-    public boolean deleteClient(Long ownerId, Long clientId) throws ClientNotFoundException {
+    public boolean deleteClient(Long ownerId, Long clientId) throws ClientNotFoundException, DeletedClientWithTaskException {
         return clientService.deleteClient(ownerId, clientId);
     }
 
