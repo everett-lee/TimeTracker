@@ -48,7 +48,7 @@ public class Query implements GraphQLQueryResolver {
     }
 
     public Set<Subtask> getAllSubtasks(Long ownerId, Long taskId) throws TaskNotFoundException {
-        return subtaskService.getAllSubtasksByOwnerAndSubtaskIds(ownerId ,taskId);
+        return subtaskService.getAllSubtasksByOwnerAndSubtaskId(ownerId ,taskId);
     }
 
     public List<TimeCommit> getAllTimeCommits(Long ownerId, Long subtaskId) throws SubtaskNotFoundException {

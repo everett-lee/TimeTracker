@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- *  Factory for creating mock security context for testing.
+ * Factory for creating mock security context for testing.
  */
 public class WithMockCustomUserFactory implements WithSecurityContextFactory<WithMockCustomUser> {
 
@@ -33,8 +33,8 @@ public class WithMockCustomUserFactory implements WithSecurityContextFactory<Wit
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication
-                        (new UsernamePasswordAuthenticationToken( principal,
-                                principal.getPassword(), principal.getAuthorities()));
+                (new UsernamePasswordAuthenticationToken(principal,
+                        principal.getPassword(), principal.getAuthorities()));
 
         return context;
     }

@@ -44,7 +44,7 @@ public class Subtask {
     @JoinColumn(name = "subtask_fk")
     private List<TimeCommit> timeCommits;
 
-    @ManyToMany( fetch = FetchType.EAGER )
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "subtask_dependentsubtask",
             joinColumns = {@JoinColumn(name = "main_subtasktask_fk")},
             inverseJoinColumns = {@JoinColumn(name = "dependent_subtask_fk")}
@@ -64,8 +64,8 @@ public class Subtask {
         if (o == this) return true;
         if (!(o instanceof Subtask)) return false;
         Subtask other = (Subtask) o;
-        if (this.getSubtaskName() != other.getSubtaskName()) return false;
-        if (this.getOwnerId() != other.getOwnerId()) return false;
+        if (!this.getSubtaskName().equals(other.getSubtaskName())) return false;
+        if (!this.getOwnerId().equals(other.getOwnerId())) return false;
         if (this.getDateAdded() != getDateAdded()) return false;
         if (this.getDateCompleted() != getDateCompleted()) return false;
         if (this.completed != other.completed) return false;

@@ -8,9 +8,8 @@ import com.timetracker.timetracker.model.TimeCommit;
 import com.timetracker.timetracker.service.ClientService;
 import com.timetracker.timetracker.service.SubtaskService;
 import com.timetracker.timetracker.service.TaskService;
-//import com.timetracker.timetracker.service.UserService;
-import com.timetracker.timetracker.service.exceptions.*;
 import com.timetracker.timetracker.service.TimeCommitService;
+import com.timetracker.timetracker.service.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -69,8 +68,9 @@ public class Mutation implements GraphQLMutationResolver {
     }
 
     public boolean deleteSubtask(Long ownerId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException, TaskNotFoundException {
-        return  subtaskService.deleteSubtask(ownerId, subtaskId);
+        return subtaskService.deleteSubtask(ownerId, subtaskId);
     }
+
     public Subtask setSubtaskComplete(Long ownerId, Long subtaskId, boolean complete) throws SubtaskNotFoundException {
         return subtaskService.setSubtaskComplete(ownerId, subtaskId, complete);
     }

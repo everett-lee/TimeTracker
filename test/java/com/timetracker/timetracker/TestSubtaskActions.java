@@ -74,8 +74,8 @@ public class TestSubtaskActions {
 
         // there are two subtasks
         assertEquals(2, t.getSubtasks().size());
-        Subtask st1 = t.getSubtasks().stream().filter( st -> st.getSubtaskName().equals(subtaskOneName)).findFirst().get();
-        Subtask st2 = t.getSubtasks().stream().filter( st -> st.getSubtaskName().equals(subtaskTwoName)).findFirst().get();
+        Subtask st1 = t.getSubtasks().stream().filter(st -> st.getSubtaskName().equals(subtaskOneName)).findFirst().get();
+        Subtask st2 = t.getSubtasks().stream().filter(st -> st.getSubtaskName().equals(subtaskTwoName)).findFirst().get();
         // first subtask has zero dependencies
         assertEquals(st1.getDependsOn().size(), 0);
         // second subtask has one dependency
@@ -130,7 +130,7 @@ public class TestSubtaskActions {
         subtask.setOwnerId(3L);
         subtaskRepo.save(subtask);
 
-        subtaskService.deleteSubtask(3L,  1L);
+        subtaskService.deleteSubtask(3L, 1L);
     }
 
 
@@ -145,7 +145,7 @@ public class TestSubtaskActions {
 
         assertEquals(2, taskRepo.findById(1L).get().getSubtasks().size());
 
-        subtaskService.deleteSubtask(1L,1L);
+        subtaskService.deleteSubtask(1L, 1L);
     }
 
 

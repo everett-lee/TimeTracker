@@ -46,7 +46,7 @@ public class ClientService {
         Client client = clientRepo.findById(clientId)
                 .orElseThrow( () -> new ClientNotFoundException(clientId));
 
-        if (client.getOwnerId() != ownerId) {
+        if (!client.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Client");
         }
 

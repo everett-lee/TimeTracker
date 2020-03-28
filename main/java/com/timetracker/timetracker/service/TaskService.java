@@ -20,7 +20,6 @@ import java.util.Set;
 @Service
 public class TaskService {
     private TaskRepository taskRepo;
-    private TaskService taskService;
     private SubtaskService subtaskService;
     private ClientRepository clientRepo;
 
@@ -59,7 +58,7 @@ public class TaskService {
         Task task = taskRepo.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
-        if (task.getOwnerId() != ownerId) {
+        if (!task.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
         }
 
@@ -74,7 +73,7 @@ public class TaskService {
                 .findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
-        if (task.getOwnerId() != ownerId) {
+        if (!task.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
         }
 
@@ -94,37 +93,34 @@ public class TaskService {
     @PreAuthorize("#ownerId == principal.id")
     public List<Task> getAllTasksByOwnerId(Long ownerId) {
 
-        List<Task> tasks = taskRepo.findAllByOwnerId(ownerId);
-
-        return tasks;
+        return taskRepo.findAllByOwnerId(ownerId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @PreAuthorize("#ownerId == principal.id")
     public Task getTaskById(Long ownerId, Long taskId) throws TaskNotFoundException {
         Task task = taskRepo
                 .findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
-        if (task.getOwnerId() != ownerId) {
+        if (!task.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
         }
 
         return task;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Set<Subtask> getSubtasksByTask(Task task) {
         return task.getSubtasks();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Client getClientByTask(Task task) {
         return task.getClient();
     }
 
-    @Transactional
-    @PreAuthorize("#task.getOwnerId() == principal.id")
+
     public long totalTime(Task task) {
         return task.getSubtasks().stream()
                 .mapToLong(st -> subtaskService.totalTime(st))

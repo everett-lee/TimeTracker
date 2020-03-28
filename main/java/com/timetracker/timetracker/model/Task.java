@@ -8,15 +8,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *  Top level task. This represents the overall goal
- *  and has a single client and one or more subtasks.
+ * Top level task. This represents the overall goal
+ * and has a single client and one or more subtasks.
  */
 @Entity
 @Data
 @Table(name = "task")
 public class Task {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")
     private Long id;
 

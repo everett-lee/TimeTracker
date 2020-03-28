@@ -37,7 +37,7 @@ public class TimeCommitService {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
-        if (subtask.getOwnerId() != ownerId) {
+        if (!subtask.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "subtask");
         }
 
@@ -90,14 +90,14 @@ public class TimeCommitService {
         TimeCommit timeCommit = timeCommitRepo.findById(timeCommitId)
                 .orElseThrow((() -> new TimeCommitNotFoundException(timeCommitId)));
 
-        if (timeCommit.getOwnerId() != ownerId) {
+        if (!timeCommit.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "TimeCommit");
         }
 
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
-        subtask.getTimeCommits().removeIf(tc -> tc.getId() == timeCommitId);
+        subtask.getTimeCommits().removeIf(tc -> tc.getId().equals(timeCommitId));
 
         return true;
     }
@@ -108,7 +108,7 @@ public class TimeCommitService {
         TimeCommit timeCommit = timeCommitRepo.findById(timeCommitId)
                 .orElseThrow((() -> new TimeCommitNotFoundException(timeCommitId)));
 
-        if (timeCommit.getOwnerId() != ownerId) {
+        if (!timeCommit.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "TimeCommit");
         }
 
@@ -116,13 +116,13 @@ public class TimeCommitService {
         return timeCommit;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @PreAuthorize("#ownerId == principal.id")
     public List<TimeCommit> getAllTimeCommitsByOwnerAndSubtaskIds(Long ownerId, Long subtaskId) throws SubtaskNotFoundException {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
-        if (subtask.getOwnerId() != ownerId) {
+        if (!subtask.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Subtask");
         }
 

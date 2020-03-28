@@ -108,7 +108,7 @@ public class TestTimeCommitActions {
     public void testUpdateTime() throws ClientNotFoundException, SubtaskNotFoundException, TaskNotFoundException, TimeCommitNotFoundException {
         TimeCommit timeCommit = timeCommitRepo.findById(1L).get();
 
-        assertEquals(Long.valueOf(22), timeCommit.getTime());
+        assertEquals(Long.valueOf(54000), timeCommit.getTime());
         timeCommitService.updateTimeCommit(1L, 1L, 5L);
 
         timeCommit = timeCommitRepo.findById(1L).get();

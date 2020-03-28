@@ -1,8 +1,8 @@
 package com.timetracker.timetracker;
 
 import com.timetracker.timetracker.model.User;
-import com.timetracker.timetracker.repository.*;
-import com.timetracker.timetracker.service.*;
+import com.timetracker.timetracker.repository.UserRepository;
+import com.timetracker.timetracker.service.JwtUserDetailsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

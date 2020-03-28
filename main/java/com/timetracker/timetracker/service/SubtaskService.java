@@ -25,7 +25,6 @@ public class SubtaskService {
 
     private SubtaskRepository subtaskRepo;
     private TaskRepository taskRepo;
-    private TimeCommitRepository timeCommitRepo;
 
     private String ACCESS_DENIED_MESSAGE = "User does not have ownership of this ";
 
@@ -33,7 +32,6 @@ public class SubtaskService {
                           TimeCommitRepository timeCommitRepo) {
         this.subtaskRepo = subtaskRepo;
         this.taskRepo = taskrepo;
-        this.timeCommitRepo = timeCommitRepo;
     }
 
     @Transactional
@@ -44,7 +42,7 @@ public class SubtaskService {
         Task task = taskRepo.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
-        if (task.getOwnerId() != ownerId) {
+        if (!task.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
         }
 
@@ -58,7 +56,7 @@ public class SubtaskService {
 
         // add the subtask's dependencies
         Set<Subtask> dependsOn = new HashSet<>();
-        for (Long id: dependsOnIds) {
+        for (Long id : dependsOnIds) {
             Subtask parent = subtaskRepo.findById(id)
                     .orElseThrow(() -> new SubtaskNotFoundException(id));
 
@@ -76,14 +74,14 @@ public class SubtaskService {
 
     @Transactional
     @PreAuthorize("#ownerId == principal.id")
-    public boolean deleteSubtask(Long ownerId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException, TaskNotFoundException {
+    public boolean deleteSubtask(Long ownerId, Long subtaskId) throws SubtaskNotFoundException, DeletedDependencyException {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
         Task task = subtask.getTask();
 
-        if (subtask.getOwnerId() != ownerId) {
-            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE +  "Subtask");
+        if (!subtask.getOwnerId().equals(ownerId)) {
+            throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Subtask");
         }
 
         // check if any subtask depends on the one that is to be deleted
@@ -92,7 +90,7 @@ public class SubtaskService {
             throw new DeletedDependencyException(subtaskId);
         }
 
-        task.getSubtasks().removeIf( st -> st.getId().equals(subtaskId));
+        task.getSubtasks().removeIf(st -> st.getId().equals(subtaskId));
         return true;
     }
 
@@ -102,7 +100,7 @@ public class SubtaskService {
         Subtask subtask = subtaskRepo.findById(subtaskId)
                 .orElseThrow(() -> new SubtaskNotFoundException(subtaskId));
 
-        if (subtask.getOwnerId() != ownerId) {
+        if (!subtask.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Subtask");
         }
 
@@ -139,17 +137,17 @@ public class SubtaskService {
     @PreAuthorize("#subtask.getOwnerId() == principal.id")
     public long totalTime(Subtask subtask) {
         return subtask.getTimeCommits().stream()
-                .mapToLong( tc -> tc.getTime())
+                .mapToLong(tc -> tc.getTime())
                 .sum();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @PreAuthorize("#ownerId == principal.id")
-    public Set<Subtask> getAllSubtasksByOwnerAndSubtaskIds(Long ownerId, Long taskId) throws TaskNotFoundException {
+    public Set<Subtask> getAllSubtasksByOwnerAndSubtaskId(Long ownerId, Long taskId) throws TaskNotFoundException {
         Task task = taskRepo.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException(taskId));
 
-        if (task.getOwnerId() != ownerId) {
+        if (!task.getOwnerId().equals(ownerId)) {
             throw new AccessDeniedException(ACCESS_DENIED_MESSAGE + "Task");
         }
 

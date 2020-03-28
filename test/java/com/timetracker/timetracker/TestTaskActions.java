@@ -135,7 +135,7 @@ public class TestTaskActions {
 
 
     // expect to get correct total time for the task
-    @Test(expected = AccessDeniedException.class)
+    @Test
     @WithMockCustomUser(id = 1L)
     public void testGetTime() throws TaskNotFoundException {
         final long expectedTime = 4;

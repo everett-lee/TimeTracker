@@ -1,8 +1,8 @@
 package com.timetracker.timetracker.service;
 
 import com.timetracker.timetracker.model.CustomPrincipalUser;
-import com.timetracker.timetracker.repository.UserRepository;
 import com.timetracker.timetracker.model.User;
+import com.timetracker.timetracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class JwtUserDetailsService implements UserDetailsService {
     private UserRepository userRepo;
     private PasswordEncoder passwordEncoder;
-
 
     @Autowired
     public JwtUserDetailsService(UserRepository userRepo, PasswordEncoder passwordEncoder) {

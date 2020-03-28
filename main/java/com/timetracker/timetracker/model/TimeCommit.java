@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Table(name = "time_commit")
 public class TimeCommit {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "time_commit_id")
     private Long id;
 

@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class TestRootQueries {
     TaskService taskService;
 
     @Test
-    @WithMockCustomUser( id = 1L )
+    @WithMockCustomUser(id = 1L)
     public void testAllTasksTwoEntries() throws ClientNotFoundException {
         String[] taskNames = {"Build rocket", "Bore some holes", "Nunchucks practice"};
 
@@ -41,7 +40,7 @@ public class TestRootQueries {
     }
 
     @Test
-    @WithMockCustomUser( id = 3L )
+    @WithMockCustomUser(id = 3L)
     public void testAllTasksNoEntries() {
         List<Task> tasks = taskService.getAllTasksByOwnerId(3L);
 
@@ -52,7 +51,7 @@ public class TestRootQueries {
     // expect exception where user provides invalid id when searching
     // for tasks
     @Test(expected = AccessDeniedException.class)
-    @WithMockCustomUser( id = 2L )
+    @WithMockCustomUser(id = 2L)
     public void testAllTasksTwoEntriesInvalidId() throws ClientNotFoundException {
 
         taskService.getAllTasksByOwnerId(1L);

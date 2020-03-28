@@ -57,16 +57,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 // no authentication for these endpoints
                 .authorizeRequests()
-                    .antMatchers("/authenticate", "/register")
-                    .permitAll()
-                    // all others must be authenticated
-                    .anyRequest().authenticated()
-                    .and()
-                    .exceptionHandling()
-                    .authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
-                     // session is not used to store user's state.
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .antMatchers("/authenticate", "/register")
+                .permitAll()
+                // all others must be authenticated
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+                // session is not used to store user's state.
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
