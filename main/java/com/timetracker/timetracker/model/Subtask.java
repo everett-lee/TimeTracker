@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -61,14 +62,14 @@ public class Subtask {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Subtask)) return false;
-        Subtask other = (Subtask) o;
-        if (!this.getSubtaskName().equals(other.getSubtaskName())) return false;
-        if (!this.getOwnerId().equals(other.getOwnerId())) return false;
-        if (this.getDateAdded() != getDateAdded()) return false;
-        if (this.getDateCompleted() != getDateCompleted()) return false;
-        if (this.completed != other.completed) return false;
-        return true;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subtask subtask = (Subtask) o;
+        return id.equals(subtask.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
